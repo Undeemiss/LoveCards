@@ -2,7 +2,7 @@ require "debugGame"
 require "cards"
 
 function love.load()
-    
+    x = 0
     cfg = {
         screenWidth = 1920, 
         screenHeight = 1080
@@ -22,8 +22,10 @@ function love.load()
 end
 
 function love.update()
+    x = (x + 1) % cfg.screenWidth
 end
 
 function love.draw()
-    love.graphics.draw(testImage, 0, 0, 0, 1080 / testImage:getHeight())
+    love.graphics.draw(testImage, x, 0, 0, 1080 / testImage:getHeight())
+    love.graphics.draw(testImage, x - cfg.screenWidth, 0, 0, 1080 / testImage:getHeight())
 end
