@@ -1,4 +1,4 @@
-require "cards"
+local cards = require "cards"
 local debugMode = false
 
 debugGame = {

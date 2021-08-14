@@ -64,3 +64,5 @@ cards = {
         end
     end
 }
+
+return cards
