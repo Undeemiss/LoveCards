@@ -1,43 +1,35 @@
 require "debugGame"
 local cards = require "cards"
-local gui = require "gui"
+local gfx = require "gfx"
 local tick = require "tick"
+local cfg = require "cfg"
 
 function love.load()
     x = 0
-    cfg = {
-        screenWidth = 1920, 
-        screenHeight = 1080,
-        targetFps = 60,
-        targetTps = 60,
-    }
-    love.window.setMode(cfg.screenWidth, cfg.screenHeight)
-    tick.framerate = cfg.targetFps
-    print(tick.rate)
-    tick.rate = 1 / cfg.targetTps
-    print(tick.rate)
-    debugGame.enable()
+    -- debugGame.enable()
 
-
-    testImage = love.graphics.newImage("test.jpg")
+    testImage = love.graphics.newImage("textures/test.jpg")
+    testImage:setFilter("linear", "linear", 1)
 
     deck = cards.newDeck()
     cards.shuffle(deck)
-    debugGame.stringPrint("Shuffled Deck: ", false)
-    debugGame.deckPrint(deck)
-    debugGame.cardPrint(cards.draw(deck))
-    debugGame.deckPrint(cards.draw(deck, 8))
-
-    testCard = gui.newDispCard(cards.draw(deck))
+    testCard = gfx.newDispCard(cards.draw(deck))
 end
 
 function love.update()
-    x = (x + 1) % cfg.screenWidth
+    x = (x + 1) % cfg.screen.w
     testCard.pitch = testCard.pitch + 0.01
 end
 
 function love.draw()
-    love.graphics.draw(testImage, x, 0, 0, 1080 / testImage:getHeight())
-    love.graphics.draw(testImage, x - cfg.screenWidth, 0, 0, 1080 / testImage:getHeight())
-    testCard:draw()
+    canvas = love.graphics.newCanvas(cfg.screen.w, cfg.screen.h)
+    canvas:setFilter("nearest", "nearest", 0)
+    canvas:renderTo(
+        function()
+            love.graphics.draw(testImage, x, 0, 0, cfg.screen.h / testImage:getHeight())
+            love.graphics.draw(testImage, x - cfg.screen.w, 0, 0, cfg.screen.h / testImage:getHeight())
+            testCard:draw()
+        end
+    )
+    love.graphics.draw(canvas, 0, 0, 0, cfg.screen.scale)
 end

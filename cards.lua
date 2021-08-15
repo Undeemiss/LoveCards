@@ -1,10 +1,16 @@
 cards = {
 
     suitNames = {
-        "Spades", "Diamonds", "Clubs", "Hearts", "Stars"
+        [0]="Jokers", "Spades", "Diamonds", "Clubs", "Hearts", "Stars"
+    },
+    suitColors = {
+        [0]={106,13,173}, {0,0,0}, {0,0,1}, {0,1,0}, {1,0,0}, {249,215,28}
     },
     rankNames = {
-        "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"
+        [0]="Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"
+    },
+    rankNamesShort = {
+        [0]="X", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
     },
 
     newCard = function(suit, rank)
