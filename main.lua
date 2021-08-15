@@ -11,14 +11,14 @@ function love.load()
     testImage = love.graphics.newImage("textures/test.jpg")
     testImage:setFilter("linear", "linear", 1)
 
-    deck = cards.newDeck()
+    deck = cards.newDeck(5, 3, 13, 2, 2)
     cards.shuffle(deck)
     testCard = gfx.newDispCard(cards.draw(deck))
 end
 
 function love.update(dt)
     x = (x + 30*dt) % cfg.screen.w
-    testCard.pitch = testCard.pitch + 0.60*dt
+    testCard.roll = testCard.roll + 0.60*dt
 end
 
 function love.draw()

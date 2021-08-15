@@ -4,13 +4,13 @@ cards = {
         [0]="Jokers", "Spades", "Diamonds", "Clubs", "Hearts", "Stars"
     },
     suitColors = {
-        [0]={106,13,173}, {0,0,0}, {0,0,1}, {0,1,0}, {1,0,0}, {249,215,28}
+        [0]={106,13,173}, {0.2,0.2,0.2}, {0,0,1}, {0,1,0}, {1,0,0}, {249,215,28}
     },
     rankNames = {
         [0]="Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"
     },
     rankNamesShort = {
-        [0]="X", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
+        [0]="X", "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"
     },
 
     newCard = function(suit, rank)
@@ -20,7 +20,7 @@ cards = {
         return card
     end,
     
-    newDeck = function(suitCount, minRank, maxRank, jokerCount) 
+    newDeck = function(suitCount, minRank, maxRank, jokerCount, decks) 
         suitCount = suitCount or 4
         minRank = minRank or 1
         maxRank = maxRank or 13
@@ -29,15 +29,17 @@ cards = {
         local deck = {}
         local i = 1
 
-        for suit = suitCount, 1, -1 do
-            for rank = maxRank, minRank, -1 do
-                deck[i] = cards.newCard(suit, rank)
+        for j = 1, decks do
+            for suit = suitCount, 1, -1 do
+                for rank = maxRank, minRank, -1 do
+                    deck[i] = cards.newCard(suit, rank)
+                    i = i + 1
+                end
+            end
+            for j = 1, jokerCount do
+                deck[i] = cards.newCard(0, 0)
                 i = i + 1
             end
-        end
-        for j = 1, jokerCount do
-            deck[i] = cards.newCard(0, 0)
-            i = i + 1
         end
         deck.size = i - 1
     
