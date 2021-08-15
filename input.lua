@@ -11,8 +11,12 @@ input = {
 }
 
 input.update = function()
-    input.cursor.pos.x = love.mouse.getX()
-    input.cursor.pos.y = love.mouse.getY()
+    if love.keyboard.isDown("escape") then
+        love.event.quit()
+    end
+
+    input.cursor.pos.x = math.floor(love.mouse.getX() / 3)
+    input.cursor.pos.y = math.floor(love.mouse.getY() / 3)
 
     local now = love.mouse.isDown(1)
     local last = input.cursor.held
