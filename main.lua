@@ -1,7 +1,6 @@
 require "debugGame"
 local cards = require "cards"
 local gfx = require "gfx"
-local tick = require "tick"
 local cfg = require "cfg"
 
 function love.load()
@@ -16,9 +15,9 @@ function love.load()
     testCard = gfx.newDispCard(cards.draw(deck))
 end
 
-function love.update()
-    x = (x + 1) % cfg.screen.w
-    testCard.pitch = testCard.pitch + 0.01
+function love.update(dt)
+    x = (x + 30*dt) % cfg.screen.w
+    testCard.pitch = testCard.pitch + 0.60*dt
 end
 
 function love.draw()
