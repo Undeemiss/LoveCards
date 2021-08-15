@@ -1,7 +1,8 @@
-require "debugGame"
+-- local debugGame = require "debugGame"
 local cards = require "cards"
 local gfx = require "gfx"
 local cfg = require "cfg"
+local input = require "input"
 
 function love.load()
     x = 0

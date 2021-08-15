@@ -1,22 +1,24 @@
 input = {
-    newButton = function(name, icon)
-        button = {}
-
-        button.now = false  --Is the button presently held
-        button.last = false --Was the button being held last frame
-
-        button.name = name --Name of the button to use if it is referenced in plaintext
-        button.icon = icon --Image of the button to use if it is rendered in the gui
-
-        return button
-    end
+    cursor = {
+        pos = {
+            x = 0,
+            y = 0,
+        },
+        held = false,    -- (held this frame)
+        press = false,   -- (held this frame) and (not held last frame)
+        release = false, -- (not held this frame) and (held last frame)
+    }
 }
 
 input.update = function()
-    for _,button in pairs(input) do
-        button.last = button.now
-        button.now = false --TODO
-    end
-end,
+    input.cursor.pos.x = love.mouse.getX()
+    input.cursor.pos.y = love.mouse.getY()
+
+    local now = love.mouse.isDown(1)
+    local last = input.cursor.held
+    input.cursor.held = now
+    input.cursor.press = now and (not last)
+    input.cursor.release = (not now) and last
+end
 
 return input
