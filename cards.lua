@@ -30,8 +30,8 @@ cards = {
             h = 48,
 
             loadFront = function(self)
-                self.front = love.graphics.newCanvas(self.w,self.h)
-                self.front:renderTo(
+                local front = love.graphics.newCanvas(self.w,self.h)
+                front:renderTo(
                     function()
                         love.graphics.setColor(cards.suits.colors[self.cardData.suit])
                         love.graphics.rectangle("fill", 0, 0, self.w, self.h, self.w/10, self.h/10)
@@ -41,14 +41,15 @@ cards = {
                     end
                 )
                 love.graphics.setColor(1,1,1)
+                return front
             end,
 
             setCard = function(self, cardData)
                 self.cardData = cardData
-                self.loadFront()
             end,
 
             draw = function(self)
+                self.front = self.front or self:loadFront()
                 self.roll = self.roll % (2*math.pi)
                 local stretchX = math.cos(self.roll)
 
@@ -63,8 +64,6 @@ cards = {
                 end
             end
         }
-
-        card:loadFront()
         return card
     end,
     
