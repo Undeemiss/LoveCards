@@ -1,3 +1,5 @@
+local input = require "input"
+
 gui = {
 
     grabbed = false,

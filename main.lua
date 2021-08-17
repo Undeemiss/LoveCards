@@ -10,9 +10,9 @@ function love.load()
     tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
 
     deck = cards.newDeck(5, 3, 13, 2, 2)
-    cards.shuffle(deck)
+    deck:shuffle()
 
-    testCard = cards.newCard(cards.draw(deck))
+    testCard = cards.newCard(deck:pop())
 end
 
 function love.update(dt)

@@ -18,11 +18,13 @@ cards = {
         return cardData
     end,
 
-    newCard = function(cardi, xi, yi, rolli)
+    newCard = function(cardi, xi, yi, txi, tyi, rolli)
         local card = {
             cardData = cardi,
             x = xi or 0, -- X-coordinate of the top-left corner of the card
+            tx = txi or 0,
             y = yi or 0, -- Y-coordinate of the top-left corner of the card
+            ty = tyi or 0,
             roll = rolli or 0, -- Radians of horizontal rotation (about the y-axis)
             w = 32,
             h = 48,
@@ -88,35 +90,28 @@ cards = {
             end
         end
         deck.size = i - 1
+
+        deck.pop = function(deck, n) -- Pops a cardData from the top of the given deck, returning the popped cardData.
+            if deck.size > 0 then
+                local popped = deck[deck.size]
+                deck[deck.size] = nil
+                deck.size = deck.size - 1
+                return popped
+            else
+                return nil
+            end
+        end
+
+        deck.shuffle = function(deck) --Shuffles an input deck.
+            for i = 2, deck.size do
+                local j = love.math.random(i)
+                deck[i], deck[j] = deck[j], deck[i]
+            end
+        end
     
         return deck
     end,
-
-    draw = function(deck, n) --Draws n cards from the top of the given deck. If n is nil, returns a single value rather than a table of one card.
-        local drawn = {}
-        local size = deck.size
-        n1 = n or 1
-        for i = 1,n1 do
-            drawn[i] = deck[size]
-            deck[size] = nil
-            size = size - 1
-        end
-        deck.size = size
-        drawn.size = n1
-
-        if n == nil then
-            return drawn[1]
-        else
-            return drawn
-        end
-    end,
-
-    shuffle = function(deck) --Shuffles an input deck.
-        for i = 2, deck.size do
-            local j = love.math.random(i)
-            deck[i], deck[j] = deck[j], deck[i]
-        end
-    end
+    
 }
 
 return cards
