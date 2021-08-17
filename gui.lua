@@ -37,7 +37,7 @@ gui = {
     end,
 
     draw = function()
-        for cid = 1,players[gui.pid].hand.size do
+        for cid = players[gui.pid].hand.size, 1, -1 do
             players[gui.pid].hand[cid]:draw()
         end
     end,
