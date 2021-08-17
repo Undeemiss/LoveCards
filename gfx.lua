@@ -46,8 +46,7 @@ gfx = {
                     love.graphics.draw(self.front, self.x + xOffset, self.y, 0, stretchX, 1)
                 else
                     -- Back side of card
-                    love.graphics.draw(gfx.cardBack
-            , self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
+                    love.graphics.draw(gfx.cardBack, self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
                 end
             end
         }
