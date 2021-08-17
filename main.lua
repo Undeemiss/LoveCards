@@ -7,7 +7,6 @@ local input = require "input"
 function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
     tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
-    love.graphics.setLineStyle("rough")
 
     deck = cards.newDeck(5, 3, 13, 2, 2)
     cards.shuffle(deck)

@@ -11,5 +11,6 @@ cfg = {
 
 love.window.setMode(1920, 1080)
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
+love.graphics.setLineStyle("rough")
 
 return cfg
