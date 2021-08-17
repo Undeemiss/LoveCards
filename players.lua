@@ -10,11 +10,31 @@ players = {
             points = 0,
             hand = {
                 size = 0,
+                order = {
+                    setTop = function(self, cid)
+                        local temp1 = cid
+                        local temp2 = nil
+                        local i = 1
+                        while true do
+                            -- Move items down the table
+                            temp2 = self[i]
+                            self[i] = temp1
+                            temp1 = temp2
+                            i = i + 1
+
+                            -- Stop if the most recently removed item is the one being moved to the top
+                            if temp1 == cid then
+                                return nil
+                            end
+                        end
+                    end,
+                },
 
                 newHand = function(self, deck, size)
                     -- Erase the existing hand
                     for i = 1, self.size do
                         self[i] = nil
+                        self.order[i] = nil
                     end
 
                     -- Determine the default distribution of the cards
@@ -30,9 +50,11 @@ players = {
                     -- Create the hand
                     for i = 1, row1Size do
                         self[i] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row1Size-1)) + (40*(i-1)), ((cfg.bs.h/2)-24) - rowOffset)
+                        self.order[i] = i
                     end
                     for i = 1, row2Size do
                         self[i + row1Size] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1)), ((cfg.bs.h/2)-24) + rowOffset)
+                        self.order[i + row1Size] = i + row1Size
                     end
                     self.size = size
                 end,

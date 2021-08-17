@@ -38,7 +38,7 @@ gui = {
 
     draw = function()
         for cid = players[gui.pid].hand.size, 1, -1 do
-            players[gui.pid].hand[cid]:draw()
+            players[gui.pid].hand[players[gui.pid].hand.order[cid]]:draw()
         end
     end,
 
@@ -54,8 +54,10 @@ gui = {
     end,
 
     findPressedCard = function()
-        for cid = 1, players[gui.pid].hand.size do
+        for i = 1, players[gui.pid].hand.size do
+            cid = players[gui.pid].hand.order[i]
             if input.obj.press(players[gui.pid].hand[cid]) then
+                players[gui.pid].hand.order:setTop(cid)
                 return cid
             end
         end
