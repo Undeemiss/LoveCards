@@ -112,7 +112,38 @@ dbg = {
             love.graphics.rectangle("fill", x,y,w,h)
             love.graphics.setColor(1,1,1)
         end
+    },
+
+    keybinds = {
+        holdingR = false,
+        holdingD = false,
+
+        update = function()
+            -- Debug keybinds
+            if love.keyboard.isDown("escape") then
+                love.event.quit()
+            end
+
+            if love.keyboard.isDown("r") then
+                if not dbg.keybinds.holdingR then
+                    love.load()
+                end
+                dbg.keybinds.holdingR = true
+            else
+                dbg.keybinds.holdingR = false
+            end
+
+            if love.keyboard.isDown("d") then
+                if not dbg.keybinds.holdingD then
+                    gui.loadPlr(1)
+                end
+                dbg.keybinds.holdingD = true
+            else
+                dbg.keybinds.holdingD = false
+            end
+        end,
     }
+    
 
 }
 

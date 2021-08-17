@@ -19,6 +19,7 @@ function love.load()
 end
 
 function love.update(dt)
+    dbg.keybinds.update()
     input.update()
     dbg.tapStatus.update(dt)
     gui.update(dt)
