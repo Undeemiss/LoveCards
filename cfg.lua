@@ -6,8 +6,7 @@ cfg = {
     bs = { -- bottom screen
         w = 320,
         h = 240
-    },
-    dispCardHeightMultiplier = 1.5
+    }
 }
 
 love.window.setMode(1920, 1080)

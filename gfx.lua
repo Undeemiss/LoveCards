@@ -33,13 +33,6 @@ gfx = {
                 self.loadFront()
             end,
 
-            setSize = function(self, size)
-                self.size = size
-                self.w = self.size
-                self.h = self.size * cfg.dispCardHeightMultiplier
-                self:loadTextures()
-            end,
-
             draw = function(self)
                 self.roll = self.roll % (2*math.pi)
                 local stretchX = math.cos(self.roll)
