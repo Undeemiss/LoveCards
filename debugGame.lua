@@ -14,23 +14,23 @@ dbg = {
             end
         end,
     
-        card = function(card, newline) -- Prints information about a given card
+        cardData = function(card, newline) -- Prints information about a given card
             if card.rank == 0 then
-                dbg.stringPrint("Joker", newline)
+                dbg.print.string("Joker", newline)
             else
-                dbg.stringPrint(cards.rankNames[card.rank] .. " of " .. cards.suitNames[card.suit], newline)
+                dbg.print.string(cards.ranks.names[card.rank] .. " of " .. cards.suits.names[card.suit], newline)
             end
         end,
     
         deck = function(deck, newline) -- Prints information about a given deck
-            dbg.stringPrint("{", false)
+            dbg.print.string("{", false)
             for i = deck.size, 1, -1 do
-                dbg.cardPrint(deck[i], false)
+                dbg.print.cardData(deck[i], false)
                 if i > 1 then
-                    dbg.stringPrint(", ", false)
+                    dbg.print.string(", ", false)
                 end
             end
-            dbg.stringPrint("}", newline)
+            dbg.print.string("}", newline)
         end
     },
 

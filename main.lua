@@ -12,7 +12,7 @@ function love.load()
     deck = cards.newDeck(5, 3, 13, 2, 2)
     cards.shuffle(deck)
 
-    testCard = gfx.newDispCard(cards.draw(deck))
+    testCard = cards.newCard(cards.draw(deck))
 end
 
 function love.update(dt)
