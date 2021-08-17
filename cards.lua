@@ -18,7 +18,7 @@ cards = {
         return cardData
     end,
 
-    newCard = function(cardi, xi, yi, txi, tyi, rolli)
+    newCard = function(cardi, txi, tyi, rolli)
         local card = {
             cardData = cardi,
             x = xi or 0, -- X-coordinate of the top-left corner of the card

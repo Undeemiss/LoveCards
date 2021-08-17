@@ -4,6 +4,7 @@ local gfx = require "gfx"
 local cfg = require "cfg"
 local input = require "input"
 local gui = require "gui"
+local players = require "players"
 
 function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
@@ -12,13 +13,15 @@ function love.load()
     deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
 
-    testCard = cards.newCard(deck:pop())
+    players[1] = players.newPlayer()
+    players[1].hand:newHand(deck, 9)
+    gui.loadPlr(1)
 end
 
 function love.update(dt)
     input.update()
     dbg.tapStatus.update(dt)
-    gui.update()
+    gui.update(dt)
 end
 
 function love.draw()
@@ -34,7 +37,7 @@ function love.draw()
     bsCanvas:renderTo(
         function()
             love.graphics.draw(gfx.deskImg, 0, 0)
-            testCard:draw()
+            gui.draw()
         end
     )
 
