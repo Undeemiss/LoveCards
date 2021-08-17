@@ -14,10 +14,10 @@ input = {
             return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
         end,
         press = function(obj) -- Dectects whether a given object is being pressed
-            return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
+            return input.cursor.press and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
         end,
         release = function(obj) -- Detects whether a given object is being released
-            return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
+            return input.cursor.release and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
         end
     }
     
@@ -39,8 +39,17 @@ input.update = function()
         local lastY = input.cursor.y
         input.cursor.x = math.floor(love.mouse.getX() / 3)
         input.cursor.y = math.floor(love.mouse.getY() / 3)
-        input.cursor.dx = input.cursor.x - lastX
-        input.cursor.dy = input.cursor.y - lastY
+
+        if last then
+            input.cursor.dx = input.cursor.x - lastX
+            input.cursor.dy = input.cursor.y - lastY
+        else
+            input.cursor.dx = 0
+            input.cursor.dy = 0
+        end
+    else
+        input.cursor.dx = 0
+        input.cursor.dy = 0
     end
 end
 

@@ -3,6 +3,7 @@ local cards = require "cards"
 local gfx = require "gfx"
 local cfg = require "cfg"
 local input = require "input"
+local gui = require "gui"
 
 function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
@@ -17,6 +18,7 @@ end
 function love.update(dt)
     input.update()
     dbg.tapStatus.update(dt)
+    gui.update()
 
     testCard.roll = testCard.roll + 0.60*dt
 end

@@ -72,6 +72,9 @@ dbg = {
 
             -- Assorted debug info
             -- dbg.tapStatus.draw(0,980,100,100) -- Tap Status Indicator
+            love.graphics.setFont(gfx.defaultFont)
+            love.graphics.print("input.cursor.dx: " .. input.cursor.dx, 10, 730)
+            love.graphics.print("input.cursor.dy: " .. input.cursor.dy, 10, 750)
             
         end
     },
