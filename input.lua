@@ -37,8 +37,8 @@ input.update = function()
     if now then
         local lastX = input.cursor.x
         local lastY = input.cursor.y
-        input.cursor.x = math.floor(love.mouse.getX() / 3)
-        input.cursor.y = math.floor(love.mouse.getY() / 3)
+        input.cursor.x = math.min(math.floor(love.mouse.getX() / 3), 320)
+        input.cursor.y = math.min(math.floor(love.mouse.getY() / 3), 240)
 
         if last then
             input.cursor.dx = input.cursor.x - lastX
