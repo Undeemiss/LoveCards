@@ -8,6 +8,19 @@ input = {
         press = false,   -- (held this frame) and (not held last frame)
         release = false, -- (not held this frame) and (held last frame)
     }
+
+    obj = {
+        held = function(obj) -- Detects whether a given object is being held
+            return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
+        end,
+        press = function(obj) -- Dectects whether a given object is being pressed
+            return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
+        end,
+        release = function(obj) -- Detects whether a given object is being released
+            return input.cursor.held and (obj.x <= input.cursor.x and obj.x + obj.w >= input.cursor.x) and (obj.y <= input.cursor.y and obj.y + obj.h >= input.cursor.y)
+        end
+    }
+    
 }
 
 input.update = function()

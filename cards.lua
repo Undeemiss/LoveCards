@@ -59,17 +59,7 @@ cards = {
                     -- Back side of card
                     love.graphics.draw(gfx.cardBack, self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
                 end
-            end,
-
-            held = function(self)
-                if input.cursor.held then
-                    return (self.x <= input.cursor.x and self.x + self.w >= input.cursor.x) and (self.y <= input.cursor.y and self.y + self.h >= input.cursor.y)
-                else
-                    return false
-                end
             end
-
-
         }
 
         card:loadFront()
