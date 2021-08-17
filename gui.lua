@@ -17,8 +17,10 @@ gui = {
     end,
 
     slideCard = function(card)
-        card.x = card.x + input.cursor.dx
-        card.y = card.y + input.cursor.dy
+        card.tx = card.tx + input.cursor.dx
+        card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
+        card.ty = card.ty + input.cursor.dy
+        card.y = math.min(math.max(card.ty,0), cfg.bs.h - 48)
     end,
 }
 

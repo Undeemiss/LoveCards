@@ -29,7 +29,6 @@ function love.draw()
     tsCanvas:renderTo(
         function()
             love.graphics.clear(0,0,0,1)
-            testCard:draw()
         end
     )
 
