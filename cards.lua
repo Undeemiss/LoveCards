@@ -34,13 +34,14 @@ cards = {
                 front:renderTo(
                     function()
                         love.graphics.setColor(cards.suits.colors[self.cardData.suit])
-                        love.graphics.rectangle("fill", 0, 0, self.w, self.h, self.w/10, self.h/10)
+                        love.graphics.rectangle("fill", 0, 0, self.w, self.h, 4)
                         love.graphics.setColor(0,0,0)
-                        love.graphics.setFont(gfx.cardFont)
+                        love.graphics.setFont(gfx.cards.font)
                         love.graphics.printf(cards.ranks.sNames[self.cardData.rank], 0, 6, 32, "center")
+                        love.graphics.setColor(1,1,1)
+                        love.graphics.draw(gfx.cards.border)
                     end
                 )
-                love.graphics.setColor(1,1,1)
                 return front
             end,
 
@@ -60,7 +61,7 @@ cards = {
                     love.graphics.draw(self.front, self.x + xOffset, self.y, 0, stretchX, 1)
                 else
                     -- Back side of card
-                    love.graphics.draw(gfx.cardBack, self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
+                    love.graphics.draw(gfx.cards.back, self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
                 end
             end
         }
