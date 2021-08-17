@@ -56,11 +56,9 @@ gui = {
     findPressedCard = function()
         for cid = 1, players[gui.pid].hand.size do
             if input.obj.press(players[gui.pid].hand[cid]) then
-                print(cid)
                 return cid
             end
         end
-        print("0")
         return 0
     end,
 
