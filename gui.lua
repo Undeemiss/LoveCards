@@ -43,6 +43,13 @@ gui = {
     end,
 
     loadPlr = function(pid)
+        -- Unload the fronts of the previous cards
+        if gui.pid ~= 0 then
+            for i=1,players[gui.pid].hand.size do
+                gui.players[gui.pid].hand[cid].front = nil
+            end
+        end
+
         gui.pid = pid
         gui.animTime = 0
         gui.spreadingCards = true
