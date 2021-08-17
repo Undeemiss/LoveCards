@@ -1,4 +1,5 @@
 local input = require "input"
+local players = require "players"
 
 gui = {
 
@@ -45,8 +46,8 @@ gui = {
     loadPlr = function(pid)
         -- Unload the fronts of the previous cards
         if gui.pid ~= 0 then
-            for i=1,players[gui.pid].hand.size do
-                gui.players[gui.pid].hand[cid].front = nil
+            for cid = 1, players[gui.pid].hand.size do
+                players[gui.pid].hand[cid].front = nil
             end
         end
 
