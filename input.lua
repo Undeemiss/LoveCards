@@ -27,6 +27,15 @@ input.update = function()
     if love.keyboard.isDown("escape") then
         love.event.quit()
     end
+    if love.keyboard.isDown("r") then
+        if not holdingR then
+            love.load()
+        end
+        
+        holdingR = true
+    else
+        holdingR = false
+    end
 
     local now = love.mouse.isDown(1)
     local last = input.cursor.held

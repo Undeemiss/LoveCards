@@ -44,7 +44,7 @@ gui = {
 
     loadPlr = function(pid)
         gui.pid = pid
-        gui.animFrame = 0
+        gui.animTime = 0
         gui.spreadingCards = true
         for cid = 1,players[gui.pid].hand.size do
             players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
