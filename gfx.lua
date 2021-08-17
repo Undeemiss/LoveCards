@@ -5,7 +5,7 @@ gfx = {
     cardFont = love.graphics.newFont("textures/fonts/Days Sans Black.otf", 28, "mono", 1),
     cardBack = love.graphics.newImage("textures/cards/back.png"),
 
-    newDispCard = function(cardi, xi, yi, rolli, yawi)
+    newDispCard = function(cardi, xi, yi, rolli)
         local dispCard = {
             card = cardi,
             x = xi or 0, -- X-coordinate of the top-left corner of the card
@@ -28,6 +28,11 @@ gfx = {
                 love.graphics.setColor(1,1,1)
             end,
 
+            setCard = function(self, card)
+                self.card = card
+                self.loadFront()
+            end,
+
             setSize = function(self, size)
                 self.size = size
                 self.w = self.size
@@ -47,6 +52,14 @@ gfx = {
                 else
                     -- Back side of card
                     love.graphics.draw(gfx.cardBack, self.x + 32 - xOffset, self.y, 0, -stretchX, 1)
+                end
+            end,
+
+            held = function(self)
+                if input.cursor.held then
+                    return (self.x <= input.cursor.x and self.x + self.w >= input.cursor.x) and (self.y <= input.cursor.y and self.y + self.h >= input.cursor.y)
+                else
+                    return false
                 end
             end
         }
