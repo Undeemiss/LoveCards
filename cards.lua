@@ -20,7 +20,7 @@ cards = {
 
     newCard = function(cardi, xi, yi, rolli)
         local card = {
-            card = cardi,
+            cardData = cardi,
             x = xi or 0, -- X-coordinate of the top-left corner of the card
             y = yi or 0, -- Y-coordinate of the top-left corner of the card
             roll = rolli or 0, -- Radians of horizontal rotation (about the y-axis)
@@ -31,18 +31,18 @@ cards = {
                 self.front = love.graphics.newCanvas(self.w,self.h)
                 self.front:renderTo(
                     function()
-                        love.graphics.setColor(cards.suits.colors[self.card.suit])
+                        love.graphics.setColor(cards.suits.colors[self.cardData.suit])
                         love.graphics.rectangle("fill", 0, 0, self.w, self.h, self.w/10, self.h/10)
                         love.graphics.setColor(0,0,0)
                         love.graphics.setFont(gfx.cardFont)
-                        love.graphics.printf(cards.ranks.sNames[self.card.rank], 0, 6, 32, "center")
+                        love.graphics.printf(cards.ranks.sNames[self.cardData.rank], 0, 6, 32, "center")
                     end
                 )
                 love.graphics.setColor(1,1,1)
             end,
 
-            setCard = function(self, card)
-                self.card = card
+            setCard = function(self, cardData)
+                self.cardData = cardData
                 self.loadFront()
             end,
 

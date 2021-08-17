@@ -7,7 +7,7 @@ input = {
         held = false,    -- (held this frame)
         press = false,   -- (held this frame) and (not held last frame)
         release = false, -- (not held this frame) and (held last frame)
-    }
+    },
 
     obj = {
         held = function(obj) -- Detects whether a given object is being held
