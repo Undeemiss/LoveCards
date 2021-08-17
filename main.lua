@@ -35,7 +35,7 @@ function love.draw()
     -- Bottom Screen
     bsCanvas:renderTo(
         function()
-            love.graphics.clear(0,0,0,1)
+            love.graphics.draw(gfx.deskImg, 0, 0)
             testCard:draw()
         end
     )
