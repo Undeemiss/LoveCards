@@ -52,7 +52,7 @@ dbg = {
             love.graphics.setColor(1,1,1)
         end,
 
-        gui = function() -- Draws the given 3DS screen-sized canvases, as well as some debug information, to the actual screen
+        devScreen = function() -- Draws the given 3DS screen-sized canvases, as well as some debug information, to the actual screen
             -- love.graphics.draw(bgImage)
             love.graphics.setColor(0.1, 0.1, 0.1)
             love.graphics.rectangle("fill", 0, 0, 1920, 1080)

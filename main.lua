@@ -19,8 +19,6 @@ function love.update(dt)
     input.update()
     dbg.tapStatus.update(dt)
     gui.update()
-
-    testCard.roll = testCard.roll + 0.60*dt
 end
 
 function love.draw()
@@ -41,5 +39,5 @@ function love.draw()
     )
 
     -- Actual Screen
-    dbg.draw.gui()
+    dbg.draw.devScreen()
 end
