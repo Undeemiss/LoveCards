@@ -18,7 +18,7 @@ gui = {
         -- Animation of cards moving to their spots on the table when a new hand is loaded
         if gui.spreadingCards then
             -- Slides the cards out to their table positions
-            gui.animTime = math.min(gui.animTime + dt*2, 1)
+            gui.animTime = math.min(gui.animTime + dt*3, 1)
             for cid = 1,players[gui.pid].hand.size do
                 players[gui.pid].hand[cid].x = (1-gui.animTime)*((cfg.bs.w/2)-16) + gui.animTime*players[gui.pid].hand[cid].tx
                 players[gui.pid].hand[cid].y = (1-gui.animTime)*(((cfg.bs.h-56)/2)+32) + gui.animTime*players[gui.pid].hand[cid].ty
@@ -37,7 +37,7 @@ gui = {
 
         elseif gui.collectingCards then
             -- Slides the cards in to the middle
-            gui.animTime = math.max(gui.animTime - dt*2, 0)
+            gui.animTime = math.max(gui.animTime - dt*3, 0)
             for cid = 1,players[gui.pid].hand.size do
                 players[gui.pid].hand[cid].x = (1-gui.animTime)*((cfg.bs.w/2)-16) + gui.animTime*players[gui.pid].hand[cid].tx
                 players[gui.pid].hand[cid].y = (1-gui.animTime)*(((cfg.bs.h-56)/2)+32) + gui.animTime*players[gui.pid].hand[cid].ty
