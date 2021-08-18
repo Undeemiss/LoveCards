@@ -3,6 +3,7 @@ local players = require "players"
 
 gui = {
 
+    deckData = nil,
     grabbed = 0,
     pid = 0,
     animTime = 0,
@@ -12,6 +13,7 @@ gui = {
     canGrab = false,
     flippedDrawCard = false,
     flipDrawTimer = 0,
+    takenDiscard = false,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -90,6 +92,7 @@ gui = {
     end,
 
     initPiles = function(deck)
+        gui.deckData = deck
         gui.discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
         gui.deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
         gui.deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
@@ -126,7 +129,11 @@ gui = {
         for i = 1, players[gui.pid].hand.size + 2 do
             local cid = players[gui.pid].hand.order[i]
             local card = gui.cid2Card(cid)
-            if input.obj.press(card) then
+            if cid == -1 and gui.takenDiscard then
+                -- Do nothing
+            elseif cid == -2 and gui.flippedDrawCard then
+                -- Do nothing
+            elseif input.obj.press(card) then
                 players[gui.pid].hand.order:setTop(cid)
                 return cid
             end
@@ -152,7 +159,7 @@ gui = {
             end
         end
 
-        if gui.checkPile(card, 2) then
+        if gui.checkPile(card, 2) and ((gui.flippedDrawCard or gui.takenDiscard) or cid == -2) then
             card.x = math.floor((card.x + cfg.bs.w*2/3 - 16) / 2)
             card.y = math.floor((card.y + 8) / 2)
         end
@@ -176,16 +183,33 @@ gui = {
             card.y = card.ty
             gui.grabbed = 0
             return nil
-        elseif gui.checkPile(card, 2) then
+        elseif cid == -2 and not gui.checkPile(card, 2) then
+            gui.takenDiscard = true
+        elseif gui.checkPile(card, 2) and (gui.flippedDrawCard or gui.takenDiscard) then
             card.tx = math.floor(cfg.bs.w*2/3) - 16
             card.ty = 8
             card.x = card.tx
             card.y = card.ty
             if cid ~= -2 then
-                -- TODO: End turn
-                gui.grabbed = 0
-                return nil
+                if gui.flippedDrawCard then
+                    if cid ~= -1 then
+                        players[gui.pid].hand[cid] = gui.deck[1]
+                    end
+                    gui.deck[1] = gui.deck[2]
+                    gui.deck[2] = cards.newCard(gui.deckData:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
+                    gui.flippedDrawCard = false
+                else
+                    players[gui.pid].hand[cid] = gui.discard[1]
+                end
+                gui.discard[2] = gui.discard[1]
+                gui.discard[1] = card
+                print("Turn over!")
+                --TODO: Actually end turn
+            else
+                gui.takenDiscard = false
             end
+            gui.grabbed = 0
+            return nil
         end
         card.tx = math.min(math.max(card.tx,0), cfg.bs.w - 32)
         card.ty = math.min(math.max(card.ty,64), cfg.bs.h - 48)
