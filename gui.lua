@@ -15,6 +15,8 @@ gui = {
     flipDrawTimer = 0,
     takenDiscard = false,
     discardingId = 0,
+    waitingForPlayerSwitch = false,
+    endingTurn = false,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -53,9 +55,16 @@ gui = {
             end
 
         -- Interactable state
-        else
+        else            
+            -- Confirmation dialog before showing a player's cards
+            if gui.waitingForPlayerSwitch then
+                if input.cursor.press then
+                    gui.waitingForPlayerSwitch = false
+                    gui.spreadCards()
+                end
+
             -- Card grabbing/dropping/etc
-            if gui.canGrab then
+            elseif gui.canGrab then
                 if gui.grabbed == 0 and input.cursor.press then
                     gui.grabbed = gui.findPressedCard()
                 elseif input.cursor.release then
@@ -90,11 +99,19 @@ gui = {
             local card = gui.cid2Card(cid)
             card:draw()
         end
+
+        if gui.waitingForPlayerSwitch then
+            love.graphics.setColor(0,0,0)
+            love.graphics.rectangle("fill", 0,0, cfg.bs.w, cfg.bs.h)
+            love.graphics.setColor(1,1,1)
+            love.graphics.print("Tap screen to indicate the console has been passed")
+        end
     end,
 
     initPiles = function(deck)
         gui.deckData = deck
         gui.discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
+        gui.discard[1].x = math.floor(cfg.bs.w/3) - 16
         gui.deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
         gui.deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
         gui.firstDiscarded = false
@@ -111,18 +128,19 @@ gui = {
         gui.pid = pid
         gui.flippedDrawCard = false
         gui.takenDiscard = false
-        gui.spreadCards()
+        gui.waitingForPlayerSwitch = true
+        
+        for cid = 1,players[gui.pid].hand.size do
+            players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
+            players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
+            players[gui.pid].hand[cid].roll = math.pi
+        end
     end,
 
     spreadCards = function()
         gui.spreadingCards = true
         gui.collectingCards = false
         gui.canGrab = false
-        for cid = 1,players[gui.pid].hand.size do
-            players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
-            players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
-            players[gui.pid].hand[cid].roll = math.pi
-        end
     end,
 
     collectCards = function()
@@ -233,8 +251,7 @@ gui = {
             gui.takenDiscard = false
         end
         gui.collectCards()
-        print("Turn over!")
-        --TODO: Actually end turn
+        gui.endingTurn = true
     end,
 
     cid2Card = function(cid)
