@@ -194,7 +194,7 @@ gui = {
             card.y = card.ty
             gui.grabbed = 0
             return nil
-        elseif gui.checkPile(card, 2) and (gui.flippedDrawCard or gui.takenDiscard) then
+        elseif gui.checkPile(card, 2) and (gui.flippedDrawCard or gui.takenDiscard) and card.roll == 0 then
             card.tx = math.floor(cfg.bs.w*2/3) - 16
             card.ty = 8
             card.x = card.tx
