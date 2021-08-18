@@ -3,35 +3,38 @@ local input = require "input"
 
 dbg = {
 
-    print = {
-        string = function(string, newline) -- Prints the given string
-            if newline == nil then
-                newline = true
-            end
-            io.write(string)
-            if newline then
-                io.write("\n")
-            end
-        end,
+    string = {
     
-        cardData = function(card, newline) -- Prints information about a given card
-            if card.rank == 0 then
-                dbg.print.string("Joker", newline)
+        cardData = function(cardData) -- Converts cardData to string
+            local string = ""
+            if cardData.rank == 0 then
+                string = "Joker"
             else
-                dbg.print.string(cards.ranks.names[card.rank] .. " of " .. cards.suits.names[card.suit], newline)
+                string = cards.ranks.names[cardData.rank] .. " of " .. cards.suits.names[cardData.suit]
             end
+            return string
         end,
     
-        deck = function(deck, newline) -- Prints information about a given deck
-            dbg.print.string("{", false)
+        deck = function(deck) -- Converts deck to string
+            local string = "{"
             for i = deck.size, 1, -1 do
-                dbg.print.cardData(deck[i], false)
+                string = string .. dbg.string.cardData(deck[i])
                 if i > 1 then
-                    dbg.print.string(", ", false)
+                    string = string .. ", "
                 end
             end
-            dbg.print.string("}", newline)
-        end
+            string = string .. "}"
+            return string
+        end,
+
+        hand = function(hand) -- Converts hand to string
+            local deck = {}
+            deck.size = hand.size
+            for i=1,hand.size do
+                deck[i] = hand[i].cardData
+            end
+            return dbg.string.deck(deck)
+        end,
     },
 
     draw = {
@@ -72,10 +75,24 @@ dbg = {
 
             -- Assorted debug info
             -- dbg.tapStatus.draw(0,980,100,100) -- Tap Status Indicator
-            -- love.graphics.setFont(gfx.defaultFont)
-            -- love.graphics.print("input.cursor.dx: " .. input.cursor.dx, 10, 730)
-            -- love.graphics.print("input.cursor.dy: " .. input.cursor.dy, 10, 750)
-            
+            love.graphics.setFont(gfx.defaultFont)
+            love.graphics.print("gui.flippedDrawCard: " .. tostring(gui.flippedDrawCard), 10, 730)
+            love.graphics.print("gui.takenDiscard: " .. tostring(gui.takenDiscard), 10, 750)
+            if gui.deck[1] then
+                love.graphics.print("gui.deck[1]: ".. dbg.string.cardData(gui.deck[1].cardData), 10, 770)
+            end
+            if gui.deck[2] then
+                love.graphics.print("gui.deck[2]: ".. dbg.string.cardData(gui.deck[2].cardData), 10, 790)
+            end
+            if gui.discard[1] then
+                love.graphics.print("gui.discard[1]: ".. dbg.string.cardData(gui.discard[1].cardData), 10, 810)
+            end
+            if gui.discard[2] then
+                love.graphics.print("gui.discard[2]: ".. dbg.string.cardData(gui.discard[2].cardData), 10, 830)
+            end
+            if players[1].hand then
+                love.graphics.print("players[1].hand: ".. dbg.string.hand(players[1].hand), 10, 850)
+            end
         end
     },
 
@@ -136,7 +153,7 @@ dbg = {
 
             if love.keyboard.isDown("d") then
                 if not dbg.keybinds.holdingD then
-                    gui.loadPlr(1)
+                    gui.spreadCards()
                 end
                 dbg.keybinds.holdingD = true
             else
