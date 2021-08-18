@@ -7,6 +7,8 @@ gui = {
     pid = 0,
     animTime = 0,
     spreadingCards = false,
+    collectingCards = false,
+    canGrab = false,
 
     update = function(dt)
         -- Animation of cards moving to their spots on the table when a new hand is loaded
@@ -21,18 +23,34 @@ gui = {
             -- Ends the animation state if it's over
             if gui.animTime == 1 then
                 gui.spreadingCards = false
+                gui.canGrab = true
+            end
+
+        elseif gui.collectingCards then
+            -- Slides the cards in to the middle
+            gui.animTime = math.max(gui.animTime - dt*2, 0)
+            for cid = 1,players[gui.pid].hand.size do
+                players[gui.pid].hand[cid].x = (1-gui.animTime)*((cfg.bs.w/2)-16) + gui.animTime*players[gui.pid].hand[cid].tx
+                players[gui.pid].hand[cid].y = (1-gui.animTime)*((cfg.bs.h/2)-24) + gui.animTime*players[gui.pid].hand[cid].ty
+                players[gui.pid].hand[cid].roll = math.pi * (1+gui.animTime)
+            end
+            -- Ends the animation state if it's over
+            if gui.animTime == 0 then
+                gui.collectingCards = false
             end
 
         -- Interactable state
         else
-            if gui.grabbed == 0 and input.cursor.press then
-                gui.grabbed = gui.findPressedCard()
-            elseif input.cursor.release then
-                gui.grabbed = 0
-            end
+            if gui.canGrab then
+                if gui.grabbed == 0 and input.cursor.press then
+                    gui.grabbed = gui.findPressedCard()
+                elseif input.cursor.release then
+                    gui.grabbed = 0
+                end
 
-            if gui.grabbed ~= 0 then
-                gui.slideCard(gui.grabbed)
+                if gui.grabbed ~= 0 then
+                    gui.slideCard(gui.grabbed)
+                end
             end
         end
     end,
@@ -52,13 +70,20 @@ gui = {
         end
 
         gui.pid = pid
-        gui.animTime = 0
         gui.spreadingCards = true
+        gui.collectingCards = false
+        gui.canGrab = false
         for cid = 1,players[gui.pid].hand.size do
             players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
             players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
             players[gui.pid].hand[cid].roll = math.pi
         end
+    end,
+
+    collectCards = function()
+        gui.spreadingCards = false
+        gui.collectingCards = true
+        gui.canGrab = false
     end,
 
     findPressedCard = function()

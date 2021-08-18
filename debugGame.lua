@@ -117,6 +117,7 @@ dbg = {
     keybinds = {
         holdingR = false,
         holdingD = false,
+        holdingC = false,
 
         update = function()
             -- Debug keybinds
@@ -140,6 +141,15 @@ dbg = {
                 dbg.keybinds.holdingD = true
             else
                 dbg.keybinds.holdingD = false
+            end
+
+            if love.keyboard.isDown("c") then
+                if not dbg.keybinds.holdingC then
+                    gui.collectCards()
+                end
+                dbg.keybinds.holdingC = true
+            else
+                dbg.keybinds.holdingC = false
             end
         end,
     }
