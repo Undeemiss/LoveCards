@@ -10,6 +10,8 @@ gui = {
     collectingCards = false,
     firstDiscarded = false,
     canGrab = false,
+    flippedDrawCard = false,
+    flipDrawTimer = 0,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -49,6 +51,7 @@ gui = {
 
         -- Interactable state
         else
+            -- Card grabbing/dropping/etc
             if gui.canGrab then
                 if gui.grabbed == 0 and input.cursor.press then
                     gui.grabbed = gui.findPressedCard()
@@ -59,6 +62,12 @@ gui = {
                 if gui.grabbed ~= 0 then
                     gui.slideCard(gui.grabbed)
                 end
+            end
+
+            -- Flipping of draw card
+            if gui.flippedDrawCard then
+                gui.flipDrawTimer = math.min(gui.flipDrawTimer+3*dt, 1)
+                gui.deck[1].roll = (1+gui.flipDrawTimer)*math.pi
             end
         end
     end,
@@ -96,6 +105,7 @@ gui = {
         end
 
         gui.pid = pid
+        gui.flippedDrawCard = false
         gui.spreadingCards = true
         gui.collectingCards = false
         gui.canGrab = false
@@ -127,25 +137,68 @@ gui = {
     slideCard = function(cid)
         local card = gui.cid2Card(cid)
         card.tx = card.tx + input.cursor.dx
-        card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
         card.ty = card.ty + input.cursor.dy
+
+        card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
         card.y = math.min(math.max(card.ty,0), cfg.bs.h - 48)
+
+        if cid == -1 and not gui.flippedDrawCard then
+            if gui.checkPile(card, 1) then
+                card.x = math.floor((card.x + cfg.bs.w/3 - 16) / 2)
+                card.y = math.floor((card.y + 8) / 2)
+            else
+                gui.flipDrawTimer = 0
+                gui.flippedDrawCard = true
+            end
+        end
+
+        if gui.checkPile(card, 2) then
+            card.x = math.floor((card.x + cfg.bs.w*2/3 - 16) / 2)
+            card.y = math.floor((card.y + 8) / 2)
+        end
     end,
 
     checkPile = function(card, target)
-        return (card.ty < 56) and (card.tx + card.w > math.floor(cfg.bs.w*target/3) - 16) and (card.tx < math.floor(cfg.bs.w*target/3) + 16)
+        -- return (card.ty < 56) and (card.tx + card.w > math.floor(cfg.bs.w*target/3) - 16) and (card.tx < math.floor(cfg.bs.w*target/3) + 16)
+        return (card.ty < 40) and (card.tx + card.w > math.floor(cfg.bs.w*target/3) - 16) and (card.tx < math.floor(cfg.bs.w*target/3) + 16)
     end,
 
     drop = function(cid)
-        if gui.checkPile(gui.cid2Card(cid), 2) then
-            --End turn
+        card = gui.cid2Card(cid)
+        if card == nil then
+            return nil
         end
+
+        if cid == -1 and not gui.flippedDrawCard and gui.checkPile(card,1) then
+            card.tx = math.floor(cfg.bs.w/3) - 16
+            card.ty = 8
+            card.x = card.tx
+            card.y = card.ty
+            gui.grabbed = 0
+            return nil
+        elseif gui.checkPile(card, 2) then
+            card.tx = math.floor(cfg.bs.w*2/3) - 16
+            card.ty = 8
+            card.x = card.tx
+            card.y = card.ty
+            if cid ~= -2 then
+                -- TODO: End turn
+                gui.grabbed = 0
+                return nil
+            end
+        end
+        card.tx = math.min(math.max(card.tx,0), cfg.bs.w - 32)
+        card.ty = math.min(math.max(card.ty,64), cfg.bs.h - 48)
+        card.x = card.tx
+        card.y = card.ty
         gui.grabbed = 0
     end,
 
     cid2Card = function(cid)
         local card = nil
-        if cid == -1 then
+        if cid == 0 then
+            return nil
+        elseif cid == -1 then
             card = gui.deck[1]
         elseif cid == -2 then
             card = gui.discard[1]
