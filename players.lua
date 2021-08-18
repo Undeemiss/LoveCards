@@ -56,8 +56,8 @@ players = {
                         self[i + row1Size] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1)), (((cfg.bs.h-56)/2)+32) + rowOffset)
                         self.order[i + row1Size] = i + row1Size
                     end
-                    self.order[size+1] = -1
-                    self.order[size+2] = -2
+                    self.order[size+1] = -2
+                    self.order[size+2] = -1
                     self.size = size
                 end,
             }

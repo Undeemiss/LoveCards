@@ -87,10 +87,6 @@ gui = {
     end,
 
     initPiles = function(deck)
-        print(deck)
-        for a,_ in pairs(deck) do
-            print(a)
-        end
         gui.discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
         gui.deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
         gui.deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
