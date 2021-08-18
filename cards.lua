@@ -21,9 +21,9 @@ cards = {
     newCard = function(cardi, txi, tyi, rolli)
         local card = {
             cardData = cardi,
-            x = xi or 0, -- X-coordinate of the top-left corner of the card
+            x = txi or 0, -- X-coordinate of the top-left corner of the card
             tx = txi or 0, -- X-coordinate of the top-left corner of where the card should be on the table (mostly to retain the actual position during animations)
-            y = yi or 0, -- Y-coordinate of the top-left corner of the card
+            y = tyi or 0, -- Y-coordinate of the top-left corner of the card
             ty = tyi or 0, -- Y-coordinate of the top-left corner of where the card should be on the table (mostly to retain the actual position during animations)
             roll = rolli or 0, -- Radians of horizontal rotation (about the y-axis)
             w = 32,
@@ -91,7 +91,7 @@ cards = {
         end
         deck.size = i - 1
 
-        deck.pop = function(deck, n) -- Pops a cardData from the top of the given deck, returning the popped cardData.
+        deck.pop = function(deck) -- Pops a cardData from the top of the given deck, returning the popped cardData.
             if deck.size > 0 then
                 local popped = deck[deck.size]
                 deck[deck.size] = nil

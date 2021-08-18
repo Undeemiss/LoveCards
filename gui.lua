@@ -8,7 +8,11 @@ gui = {
     animTime = 0,
     spreadingCards = false,
     collectingCards = false,
+    firstDiscarded = false,
     canGrab = false,
+
+    deck = {nil, nil},
+    discard = {nil, nil},
 
     update = function(dt)
         -- Animation of cards moving to their spots on the table when a new hand is loaded
@@ -17,12 +21,17 @@ gui = {
             gui.animTime = math.min(gui.animTime + dt*2, 1)
             for cid = 1,players[gui.pid].hand.size do
                 players[gui.pid].hand[cid].x = (1-gui.animTime)*((cfg.bs.w/2)-16) + gui.animTime*players[gui.pid].hand[cid].tx
-                players[gui.pid].hand[cid].y = (1-gui.animTime)*((cfg.bs.h/2)-24) + gui.animTime*players[gui.pid].hand[cid].ty
+                players[gui.pid].hand[cid].y = (1-gui.animTime)*(((cfg.bs.h-56)/2)+32) + gui.animTime*players[gui.pid].hand[cid].ty
                 players[gui.pid].hand[cid].roll = math.pi * (1+gui.animTime)
+            end
+            if not gui.firstDiscarded then
+                gui.discard[1].x = (cfg.bs.w*(1+gui.animTime)/3) - 16
+                gui.discard[1].roll = math.pi * (1-gui.animTime)
             end
             -- Ends the animation state if it's over
             if gui.animTime == 1 then
                 gui.spreadingCards = false
+                gui.firstDiscarded = true
                 gui.canGrab = true
             end
 
@@ -31,7 +40,7 @@ gui = {
             gui.animTime = math.max(gui.animTime - dt*2, 0)
             for cid = 1,players[gui.pid].hand.size do
                 players[gui.pid].hand[cid].x = (1-gui.animTime)*((cfg.bs.w/2)-16) + gui.animTime*players[gui.pid].hand[cid].tx
-                players[gui.pid].hand[cid].y = (1-gui.animTime)*((cfg.bs.h/2)-24) + gui.animTime*players[gui.pid].hand[cid].ty
+                players[gui.pid].hand[cid].y = (1-gui.animTime)*(((cfg.bs.h-56)/2)+32) + gui.animTime*players[gui.pid].hand[cid].ty
                 players[gui.pid].hand[cid].roll = math.pi * (1+gui.animTime)
             end
             -- Ends the animation state if it's over
@@ -56,9 +65,36 @@ gui = {
     end,
 
     draw = function()
-        for cid = players[gui.pid].hand.size, 1, -1 do
-            players[gui.pid].hand[players[gui.pid].hand.order[cid]]:draw()
+        -- Secondary cards of the draw and discard piles
+        if gui.discard[2] ~= nil then
+            gui.discard[2]:draw()
         end
+        if gui.deck[2] ~= nil then
+            gui.deck[2]:draw()
+        end
+
+        -- Moveable cards
+        for i = players[gui.pid].hand.size + 2, 1, -1 do
+            local cid = players[gui.pid].hand.order[i]
+            if cid == -1 then
+                gui.deck[1]:draw()
+            elseif cid == -2 then
+                gui.discard[1]:draw()
+            else
+                players[gui.pid].hand[cid]:draw()
+            end
+        end
+    end,
+
+    initPiles = function(deck)
+        print(deck)
+        for a,_ in pairs(deck) do
+            print(a)
+        end
+        gui.discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
+        gui.deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
+        gui.deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
+        gui.firstDiscarded = false
     end,
 
     loadPlr = function(pid)
@@ -87,9 +123,19 @@ gui = {
     end,
 
     findPressedCard = function()
-        for i = 1, players[gui.pid].hand.size do
+        for i = 1, players[gui.pid].hand.size + 2 do
             cid = players[gui.pid].hand.order[i]
-            if input.obj.press(players[gui.pid].hand[cid]) then
+            if cid == -1 then
+                if input.obj.press(gui.deck[1]) then
+                    players[gui.pid].hand.order:setTop(-1)
+                    return -1
+                end
+            elseif cid == -2 then
+                if input.obj.press(gui.discard[1]) then
+                    players[gui.pid].hand.order:setTop(-2)
+                    return -2
+                end
+            elseif input.obj.press(players[gui.pid].hand[cid]) then
                 players[gui.pid].hand.order:setTop(cid)
                 return cid
             end
@@ -98,7 +144,14 @@ gui = {
     end,
 
     slideCard = function(cid)
-        local card = players[gui.pid].hand[cid]
+        local card = nil
+        if cid == -1 then
+            card = gui.deck[1]
+        elseif cid == -2 then
+            card = gui.discard[1]
+        else
+            card = players[gui.pid].hand[cid]
+        end
         card.tx = card.tx + input.cursor.dx
         card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
         card.ty = card.ty + input.cursor.dy

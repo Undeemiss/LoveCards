@@ -15,6 +15,7 @@ function love.load()
 
     players[1] = players.newPlayer()
     players[1].hand:newHand(deck, 9)
+    gui.initPiles(deck)
     gui.loadPlr(1)
 end
 

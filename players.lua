@@ -31,8 +31,8 @@ players = {
                 },
 
                 newHand = function(self, deck, size)
-                    -- Erase the existing hand
-                    for i = 1, self.size do
+                    -- Erase the existing hand (Goes 2 extra times to clear order as well)
+                    for i = 1, self.size+2 do
                         self[i] = nil
                         self.order[i] = nil
                     end
@@ -49,13 +49,15 @@ players = {
 
                     -- Create the hand
                     for i = 1, row1Size do
-                        self[i] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row1Size-1)) + (40*(i-1)), ((cfg.bs.h/2)-24) - rowOffset)
+                        self[i] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row1Size-1)) + (40*(i-1)), (((cfg.bs.h-56)/2)+32) - rowOffset)
                         self.order[i] = i
                     end
                     for i = 1, row2Size do
-                        self[i + row1Size] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1)), ((cfg.bs.h/2)-24) + rowOffset)
+                        self[i + row1Size] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1)), (((cfg.bs.h-56)/2)+32) + rowOffset)
                         self.order[i + row1Size] = i + row1Size
                     end
+                    self.order[size+1] = -1
+                    self.order[size+2] = -2
                     self.size = size
                 end,
             }
