@@ -14,6 +14,7 @@ function love.load()
     deck:shuffle()
 
     players[1] = players.newPlayer()
+    players[1].name = "plr1Name"
     players[1].hand:newHand(deck, 9)
     gui.initPiles(deck)
     gui.loadPlr(1)

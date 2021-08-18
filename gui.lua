@@ -15,7 +15,6 @@ gui = {
     discard = {nil, nil},
 
     update = function(dt)
-        -- Animation of cards moving to their spots on the table when a new hand is loaded
         if gui.spreadingCards then
             -- Slides the cards out to their table positions
             gui.animTime = math.min(gui.animTime + dt*3, 1)
@@ -54,7 +53,7 @@ gui = {
                 if gui.grabbed == 0 and input.cursor.press then
                     gui.grabbed = gui.findPressedCard()
                 elseif input.cursor.release then
-                    gui.grabbed = 0
+                    gui.drop(gui.grabbed)
                 end
 
                 if gui.grabbed ~= 0 then
@@ -76,13 +75,8 @@ gui = {
         -- Moveable cards
         for i = players[gui.pid].hand.size + 2, 1, -1 do
             local cid = players[gui.pid].hand.order[i]
-            if cid == -1 then
-                gui.deck[1]:draw()
-            elseif cid == -2 then
-                gui.discard[1]:draw()
-            else
-                players[gui.pid].hand[cid]:draw()
-            end
+            local card = gui.cid2Card(cid)
+            card:draw()
         end
     end,
 
@@ -120,18 +114,9 @@ gui = {
 
     findPressedCard = function()
         for i = 1, players[gui.pid].hand.size + 2 do
-            cid = players[gui.pid].hand.order[i]
-            if cid == -1 then
-                if input.obj.press(gui.deck[1]) then
-                    players[gui.pid].hand.order:setTop(-1)
-                    return -1
-                end
-            elseif cid == -2 then
-                if input.obj.press(gui.discard[1]) then
-                    players[gui.pid].hand.order:setTop(-2)
-                    return -2
-                end
-            elseif input.obj.press(players[gui.pid].hand[cid]) then
+            local cid = players[gui.pid].hand.order[i]
+            local card = gui.cid2Card(cid)
+            if input.obj.press(card) then
                 players[gui.pid].hand.order:setTop(cid)
                 return cid
             end
@@ -140,6 +125,25 @@ gui = {
     end,
 
     slideCard = function(cid)
+        local card = gui.cid2Card(cid)
+        card.tx = card.tx + input.cursor.dx
+        card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
+        card.ty = card.ty + input.cursor.dy
+        card.y = math.min(math.max(card.ty,0), cfg.bs.h - 48)
+    end,
+
+    checkPile = function(card, target)
+        return (card.ty < 56) and (card.tx + card.w > math.floor(cfg.bs.w*target/3) - 16) and (card.tx < math.floor(cfg.bs.w*target/3) + 16)
+    end,
+
+    drop = function(cid)
+        if gui.checkPile(gui.cid2Card(cid), 2) then
+            --End turn
+        end
+        gui.grabbed = 0
+    end,
+
+    cid2Card = function(cid)
         local card = nil
         if cid == -1 then
             card = gui.deck[1]
@@ -148,10 +152,7 @@ gui = {
         else
             card = players[gui.pid].hand[cid]
         end
-        card.tx = card.tx + input.cursor.dx
-        card.x = math.min(math.max(card.tx,0), cfg.bs.w - 32)
-        card.ty = card.ty + input.cursor.dy
-        card.y = math.min(math.max(card.ty,0), cfg.bs.h - 48)
+        return card
     end,
 }
 
