@@ -6,7 +6,6 @@ players = {
 
     newPlayer = function()
         local player = {
-            name = "",
             points = 0,
             hand = {
                 size = 0,

@@ -5,6 +5,7 @@ local cfg = require "cfg"
 local input = require "input"
 local gui = require "gui"
 local players = require "players"
+local rules = require "rules"
 
 function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
@@ -13,8 +14,10 @@ function love.load()
     deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
 
+    testRound = rules.round.newRound()
+    testRound.play()
+
     players[1] = players.newPlayer()
-    players[1].name = "plr1Name"
     players[1].hand:newHand(deck, 9)
     gui.initPiles(deck)
     gui.loadPlr(1, deck)
