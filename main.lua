@@ -14,7 +14,7 @@ function love.load()
     deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
 
-    testRound = rules.round.newRound()
+    testRound = rules.newRound()
     testRound.play()
 
     players[1] = players.newPlayer()
@@ -26,7 +26,6 @@ end
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
-    dbg.tapStatus.update(dt)
     gui.update(dt)
 end
 

@@ -2,19 +2,19 @@ local gui = require "gui"
 
 rules = {}
 
-rules.round = {}
-rules.round.__index = rules.round
-rules.round.play = function()
+rules.roundConstants = {}
+rules.roundMt = {__index = rules.roundConstants}
+rules.roundConstants.play = function()
     print("test")
 end
 
-rules.round.newRound = function(cardCount)
+rules.newRound = function(cardCount)
     local newRound = {
         won = false,
         countdown = 0,
         cardCount = 0,
     }
-    setmetatable(newRound, rules.round)
+    setmetatable(newRound, rules.roundMt)
     return newRound
 end
 
