@@ -16,6 +16,7 @@ gui = {
     discardingId = 0,
     waitingForPlayerSwitch = false,
     endingTurn = false,
+    endedTurn = false,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -52,6 +53,10 @@ gui.update = function(dt)
         -- Ends the animation state if it's over
         if gui.animTime == 0 then
             gui.collectingCards = false
+            if gui.endingTurn then
+                gui.endedTurn = true
+                gui.endingTurn = false
+            end
         end
 
     -- Interactable state
@@ -101,10 +106,12 @@ gui.draw = function()
     end
 
     if gui.waitingForPlayerSwitch then
+        love.graphics.setFont(gfx.defaultFont)
         love.graphics.setColor(0,0,0)
         love.graphics.rectangle("fill", 0,0, cfg.bs.w, cfg.bs.h)
         love.graphics.setColor(1,1,1)
-        love.graphics.print("Tap screen to indicate the console has been passed")
+        love.graphics.print("Give system to Player " .. gui.pid, 0, 0)
+        love.graphics.print("Tap screen to indicate the console has been passed", 0, 20)
     end
 end
 
@@ -118,6 +125,7 @@ gui.initPiles = function(deck)
 end
 
 gui.loadPlr = function(pid)
+    print("Loading player "..pid)
     -- Unload the fronts of the previous cards
     if gui.pid ~= 0 then
         for cid = 1, players[gui.pid].hand.size do
@@ -126,6 +134,7 @@ gui.loadPlr = function(pid)
     end
 
     gui.pid = pid
+    gui.endedTurn = false
     gui.flippedDrawCard = false
     gui.takenDiscard = false
     gui.waitingForPlayerSwitch = true

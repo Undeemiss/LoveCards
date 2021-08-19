@@ -14,19 +14,15 @@ function love.load()
     deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
 
-    testRound = rules.newRound()
-    testRound.play()
+    players.initPlayers(2)
 
-    players[1] = players.newPlayer()
-    players[1].hand:newHand(deck, 9)
-    gui.initPiles(deck)
-    gui.loadPlr(1, deck)
+    rules.round.init(9)
 end
 
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
-    gui.update(dt)
+    rules.round.update(dt)
 end
 
 function love.draw()

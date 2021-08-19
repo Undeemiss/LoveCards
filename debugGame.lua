@@ -78,23 +78,23 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
 
     -- Assorted debug info
     love.graphics.setFont(gfx.defaultFont)
-    love.graphics.print("gui.flippedDrawCard: " .. tostring(gui.flippedDrawCard), 10, 730)
-    love.graphics.print("gui.takenDiscard: " .. tostring(gui.takenDiscard), 10, 750)
-    if gui.deck[1] then
-        love.graphics.print("gui.deck[1]: ".. dbg.string.cardData(gui.deck[1].cardData), 10, 770)
-    end
-    if gui.deck[2] then
-        love.graphics.print("gui.deck[2]: ".. dbg.string.cardData(gui.deck[2].cardData), 10, 790)
-    end
-    if gui.discard[1] then
-        love.graphics.print("gui.discard[1]: ".. dbg.string.cardData(gui.discard[1].cardData), 10, 810)
-    end
-    if gui.discard[2] then
-        love.graphics.print("gui.discard[2]: ".. dbg.string.cardData(gui.discard[2].cardData), 10, 830)
-    end
-    if players[1].hand then
-        love.graphics.print("players[1].hand: ".. dbg.string.hand(players[1].hand), 10, 850)
-    end
+    -- love.graphics.print("gui.flippedDrawCard: " .. tostring(gui.flippedDrawCard), 10, 730)
+    -- love.graphics.print("gui.takenDiscard: " .. tostring(gui.takenDiscard), 10, 750)
+    -- if gui.deck[1] then
+    --     love.graphics.print("gui.deck[1]: ".. dbg.string.cardData(gui.deck[1].cardData), 10, 770)
+    -- end
+    -- if gui.deck[2] then
+    --     love.graphics.print("gui.deck[2]: ".. dbg.string.cardData(gui.deck[2].cardData), 10, 790)
+    -- end
+    -- if gui.discard[1] then
+    --     love.graphics.print("gui.discard[1]: ".. dbg.string.cardData(gui.discard[1].cardData), 10, 810)
+    -- end
+    -- if gui.discard[2] then
+    --     love.graphics.print("gui.discard[2]: ".. dbg.string.cardData(gui.discard[2].cardData), 10, 830)
+    -- end
+    -- if players[1].hand then
+    --     love.graphics.print("players[1].hand: ".. dbg.string.hand(players[1].hand), 10, 850)
+    -- end
 end
 
 dbg.keybinds = {

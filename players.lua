@@ -62,7 +62,7 @@ players.orderConsts.setTop = function(self, cid)
 end
 
 
-    players.newPlayer = function()
+players.newPlayer = function()
     local player = {
         points = 0,
         hand = {
@@ -70,10 +70,19 @@ end
             order = {}
         }
     }
-    
     setmetatable(player.hand, players.handMt)
     setmetatable(player.hand.order, players.orderMt)
     return player
+end
+
+players.initPlayers = function(playerCount)
+    for i=1,players.size do
+        players[i] = nil
+    end
+    for i=1,playerCount do
+        players[i] = players.newPlayer()
+    end
+    players.size = playerCount
 end
 
 return players
