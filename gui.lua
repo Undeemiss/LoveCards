@@ -125,7 +125,6 @@ gui.initPiles = function(deck)
 end
 
 gui.loadPlr = function(pid)
-    print("Loading player "..pid)
     -- Unload the fronts of the previous cards
     if gui.pid ~= 0 then
         for cid = 1, players[gui.pid].hand.size do
@@ -260,6 +259,9 @@ gui.endTurn = function()
         gui.takenDiscard = false
     end
     gui.collectCards()
+
+    players[gui.pid].hand:score(rules.round.cardCount) --DEBUG CODE
+
     gui.endingTurn = true
 end
 
