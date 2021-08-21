@@ -91,6 +91,7 @@ players.handConsts.scoreBooks = function(hand, wilds, wildId, soleJoker, hasGrou
     strats[1].hasGroup = hasGroup
     strats[1].runningScore = 0
     strats[1].wilds = wilds
+    strats[1].refusedSplit = false
 
     for i=13,3,-1 do -- Go through the cards in descending order
         for j=1,strats.size do -- This evaluates every strat present at the beginning of this loop. Note strats added mid-loop will be skipped by j until i decreases; this is by design.
@@ -104,12 +105,16 @@ players.handConsts.scoreBooks = function(hand, wilds, wildId, soleJoker, hasGrou
                     strats[j].runningScore = strats[j].runningScore + 2*i
                 end
             elseif (books[i] or 0) == 1 then
-                if strats[j].wilds >= 2 then -- Case where two wilds are available; create a separate tree where the card is double-wilded.
+                if strats[j].wilds >= 2 and not strats[j].refusedSplit then -- Case where two wilds are available; create a separate tree where the card is double-wilded.
+                    -- If the strat in question has previously refused a split, further splitting will not take place, as it's always optimal to split at the highest necessary value
+                    -- if splitting is done at all.
                     strats.size = strats.size + 1
                     strats[strats.size] = {}
                     strats[strats.size].hasGroup = true
                     strats[strats.size].runningScore = strats[j].runningScore
                     strats[strats.size].wilds = strats[j].wilds - 2
+                    strats[strats.size].refusedSplit = false
+                    strats[j].refusedSplit = true
                 end
                 -- Case where a wild is unused, increase score by card value
                 strats[j].runningScore = strats[j].runningScore + i
