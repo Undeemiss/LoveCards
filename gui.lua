@@ -1,5 +1,6 @@
 local input = require "input"
 local players = require "players"
+local scoring = require "scoring"
 
 gui = {
     deckData = nil,
@@ -112,6 +113,7 @@ gui.draw = function()
         love.graphics.setColor(1,1,1)
         love.graphics.print("Give system to Player " .. gui.pid, 0, 0)
         love.graphics.print("Tap screen to indicate the console has been passed", 0, 20)
+        love.graphics.print("Testing: Score=" .. scoring.scoreHand(players[gui.pid].hand, 9), 0, 40)
     end
 end
 
@@ -259,8 +261,6 @@ gui.endTurn = function()
         gui.takenDiscard = false
     end
     gui.collectCards()
-
-    players[gui.pid].hand:score(rules.round.cardCount) --DEBUG CODE
 
     gui.endingTurn = true
 end

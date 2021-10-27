@@ -108,13 +108,7 @@ scoring.filter = function(list, keepIf)
     return list
 end
 
-scoring.scoreBooks = function(ranks, wilds, wildId, soleJoker, hasGroup, bestScore) -- Returns a score of 500 (impossibly high) if it isn't even close to matching bestScore
-    -- Prepare the books
-    local books = {}
-    for i=1,ranks.size do
-        books[ranks[i]] = (books[ranks[i]] or 0) + 1
-    end
-
+scoring.scoreBooks = function(books, wilds, wildId, soleJoker, hasGroup, bestScore) -- Returns a score of 500 (impossibly high) if it isn't even close to matching bestScore
     --Score the books
     local nodes = {
         size = 1
