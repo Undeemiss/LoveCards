@@ -6,11 +6,14 @@ scoring.scoreHand = function(handGiven, wildId)
     local hand = {
         size = 0
     }
+
+    -- Filter the wild cards out of the given hand
     for i=1,handGiven.size do
         if handGiven[i].cardData.rank == 0 then
             soleJoker = (wilds == 0)
             wilds = wilds + 1
         elseif handGiven[i].cardData.rank == wildId then
+            soleJoker = false
             wilds = wilds + 1
         else
             hand[hand.size + 1] = handGiven[i].cardData
@@ -19,10 +22,9 @@ scoring.scoreHand = function(handGiven, wildId)
     end
 
     -- Figure out the possible runs and try each of them
-    local suits = {{}, {}, {}, {}, {}}}
-
+    local suits = {{}, {}, {}, {}, {}}
     for i=1,hand.size do
-        suits[hand[i].suit].size = suits[hand[i].suit].size + 1
+        -- suits[hand[i].suit].size = suits[hand[i].suit].size + 1 -- I don't think this does anything
         suits[hand[i].suit][hand[i].rank] = (suits[hand[i].suit][hand[i].rank] or 0) + 1
     end
 
@@ -32,18 +34,27 @@ scoring.scoreHand = function(handGiven, wildId)
     strats[1] = {}
     strats[1].hasGroup = false
     strats[1].skippedRanks = {size = 0}
-    strats[1].
+    strats[1].suits = suits
+    strats[1].wilds = wilds
+    strats[1].runLength = 0
+    strats[1].isValid = true
+    -- TODO: Run this logic twice to allow doubled up cards
     for i=1,5 do -- For each suit
         for j=13,3,-1 do -- Go through the cards in descending order
             for k=1,strats.size do -- This evaluates every strat present at the beginning of this loop. Note strats added mid-loop will be skipped by k until j decreases; this is by design.
-                
+                if strats[1].isValid then -- Properly pruning invalid strats might yeild performance gains
+                    if strats[k].suits[i][j] > 0 then
+                        -- TODO: Create a copy where the card is used to extend/create the run, and one where it is terminated
+                    elseif strats[k].runLength > 0 and strats[k].wilds > 0 then -- Never starts a run with a wild.
+                        -- TODO: Create a copy where a wild card is used to extend the run, and one where it is terminated
+                    end
+                end
             end
         end
     end
 end
 
-
-scoring.scoreBooks = function(ranks, wilds, wildId, soleJoker, hasGroup)
+scoring.scoreBooks = function(ranks, wilds, wildId, soleJoker, hasGroup) --TODO: Add a short-circuit parameter to prune possibilities worse than the known best
     -- Prepare the books
     local books = {}
     for i=1,ranks.size do
@@ -89,7 +100,7 @@ scoring.scoreBooks = function(ranks, wilds, wildId, soleJoker, hasGroup)
         end
     end
 
-    local score = 500 -- I believe the max possible score is 127, so this will cause no issues. If a worse score is possible, it's only marginally greater.
+    local score = 500 -- I believe the max possible score is 127, so this will cause no issues. If a worse score is possible, it's only marginally greater than 127.
     for j=1,strats.size do
         if not strats[j].hasGroup and strats[j].wilds == 1 then -- In the unlikely case there's a wild left and nowhere to put it, add the value of the wild to the hand.
             -- Note that this code incorrectly handles cases with two or more wilds left over, but that doesn't matter because such a case will never be the best option.
