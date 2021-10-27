@@ -95,7 +95,7 @@ cards.deckConsts.shuffle = function(deck) --Shuffles an input deck.
 end
 
 
-cards.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks) 
+cards.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
     suitCount = suitCount or 4
     minRank = minRank or 1
     maxRank = maxRank or 13

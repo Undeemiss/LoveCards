@@ -60,7 +60,7 @@ gui.update = function(dt)
         end
 
     -- Interactable state
-    else            
+    else
         -- Confirmation dialog before showing a player's cards
         if gui.waitingForPlayerSwitch then
             if input.cursor.press then
@@ -137,7 +137,7 @@ gui.loadPlr = function(pid)
     gui.flippedDrawCard = false
     gui.takenDiscard = false
     gui.waitingForPlayerSwitch = true
-    
+
     for cid = 1,players[gui.pid].hand.size do
         players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
         players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24

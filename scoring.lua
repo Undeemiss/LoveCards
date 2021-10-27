@@ -64,7 +64,7 @@ scoring.scoreHand = function(handGiven, wildId)
             return 0
         end
     end
-    
+
     return bestScore
 end
 

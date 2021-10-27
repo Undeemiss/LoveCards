@@ -7,7 +7,7 @@ gfx = {
         back = love.graphics.newImage("textures/cards/back.png"),
     },
     defaultFont = love.graphics.getFont(),
-    deskImg = love.graphics.newImage("textures/table.png"),    
+    deskImg = love.graphics.newImage("textures/table.png"),
 }
 
 return gfx

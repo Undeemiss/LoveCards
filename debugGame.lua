@@ -64,7 +64,7 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
     love.graphics.rectangle("fill", 0, 0, 1920, 1080)
     love.graphics.setColor(1,1,1)
 
-    
+
     love.graphics.draw(bsCanvas, 0, 0, 0, 3)
 
     -- Imitation 3DS (On the right)
@@ -72,7 +72,7 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
         function()
             dbg.draw.crosshair()
         end
-    )            
+    )
     love.graphics.draw(tsCanvas, 1120, 0, 0, 2)
     love.graphics.draw(bsCanvas, 1200, 560, 0, 2)
 

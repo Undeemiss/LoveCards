@@ -8,6 +8,7 @@ local players = require "players"
 local rules = require "rules"
 
 function love.load()
+    print("Loading")
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
     tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
 
@@ -26,7 +27,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    
     -- Top Screen
     tsCanvas:renderTo(
         function()
