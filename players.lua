@@ -101,6 +101,9 @@ module.initPlayers = function(playerCount)
     end
 end
 
+--[[
+    List of players, see `newPlayer` for details
+]]
 module.players = players
 
 return module
