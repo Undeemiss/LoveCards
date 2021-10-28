@@ -5,7 +5,7 @@
 local dbg = require "debugGame"
 -- local gfx = require "gfx"
 -- local cfg = require "cfg"
--- local input = require "input"
+local input = require "input"
 -- local gui = require "gui"
 local players = require "players"
 local rules = require "rules"
@@ -23,7 +23,7 @@ end
 
 function love.update(dt)
     dbg.keybinds.update()
-    -- input.update()
+    input.update()
     -- rules.round.update(dt)
 end
 

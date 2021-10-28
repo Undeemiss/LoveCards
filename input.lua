@@ -1,4 +1,4 @@
-input = {
+local input = {
     cursor = {
         x = 0,
         dx = 0,
@@ -50,4 +50,10 @@ input.update = function()
     end
 end
 
-return input
+local module = {}
+
+module.update = function()
+    -- TODO: This
+end
+
+return module
