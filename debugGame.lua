@@ -39,27 +39,61 @@ dbg.string.hand = function(hand) -- Converts hand to string
     return dbg.string.deck(deck)
 end
 
+-- Registered keybindings
+local bindings = {}
 
-dbg.draw = {}
+-- Register a new keybinding `key` that calls `func`
+local function newKeybind(key, func)
+    assert(func ~= nil, "Tried to assign keybinding to nil func")
+    local keybind = {
+        -- Whether it needs to be held?
+        holding = false,
 
-dbg.draw.crosshair = function() -- Displays a crosshair to indicate the current state of input.cursor
-    if input.cursor.press then
-        love.graphics.setColor(0,1,0)
-    elseif input.cursor.held then
-        love.graphics.setColor(0,0,1)
-    elseif input.cursor.release then
-        love.graphics.setColor(1,0,0)
-    else
-        return nil
-    end
-
-    love.graphics.line(input.cursor.x - 4, input.cursor.y, input.cursor.x + 3, input.cursor.y)
-    love.graphics.line(input.cursor.x, input.cursor.y - 4, input.cursor.x, input.cursor.y + 3)
-
-    love.graphics.setColor(1,1,1)
+        key = key,
+        func = func,
+    }
+    bindings[#bindings+1] = keybind
 end
 
-dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as well as some debug information, to the actual screen
+-- Displays a crosshair to indicate the current state of input.cursor
+local function crosshair()
+    -- TODO: This
+    -- if input.cursor.press then
+    --     love.graphics.setColor(0,1,0)
+    -- elseif input.cursor.held then
+    --     love.graphics.setColor(0,0,1)
+    -- elseif input.cursor.release then
+    --     love.graphics.setColor(1,0,0)
+    -- else
+    --     return nil
+    -- end
+
+    -- love.graphics.line(input.cursor.x - 4, input.cursor.y, input.cursor.x + 3, input.cursor.y)
+    -- love.graphics.line(input.cursor.x, input.cursor.y - 4, input.cursor.x, input.cursor.y + 3)
+
+    -- love.graphics.setColor(1,1,1)
+end
+
+local module = {}
+module.keybinds = {}
+module.draw = {}
+
+module.keybinds.update = function()
+    for k,v in ipairs(bindings) do
+        if love.keyboard.isDown(v.key) then
+            if not v.holding then
+                print(v, v.func)
+                v.func()
+                v.holding = true
+            end
+        else
+            v.holding = false
+        end
+    end
+end
+
+-- Draws the given 3DS screen-sized canvases, as well as some debug information, to the actual screen
+module.draw.devScreen = function()
     -- love.graphics.draw(bgImage)
     love.graphics.setColor(0.1, 0.1, 0.1)
     love.graphics.rectangle("fill", 0, 0, 1920, 1080)
@@ -71,7 +105,7 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
     -- Imitation 3DS (On the right)
     cfg.bsCanvas:renderTo(
         function()
-            dbg.draw.crosshair()
+            crosshair()
         end
     )
     love.graphics.draw(cfg.tsCanvas, 1120, 0, 0, 2)
@@ -96,39 +130,6 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
     -- if players[1].hand then
     --     love.graphics.print("players[1].hand: ".. dbg.string.hand(players[1].hand), 10, 850)
     -- end
-end
-
--- Registered keybindings
-local bindings = {}
-
--- Register a new keybinding `key` that calls `func`
-local function newKeybind(key, func)
-    assert(func ~= nil, "Tried to assign keybinding to nil func")
-    local keybind = {
-        -- Whether it needs to be held?
-        holding = false,
-
-        key = key,
-        func = func,
-    }
-    bindings[#bindings+1] = keybind
-end
-
-local module = {}
-module.keybinds = {}
-
-module.keybinds.update = function()
-    for k,v in ipairs(bindings) do
-        if love.keyboard.isDown(v.key) then
-            if not v.holding then
-                print(v, v.func)
-                v.func()
-                v.holding = true
-            end
-        else
-            v.holding = false
-        end
-    end
 end
 
 newKeybind("escape", love.event.quit)

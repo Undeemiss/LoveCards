@@ -4,7 +4,7 @@
 
 local dbg = require "debugGame"
 -- local gfx = require "gfx"
--- local cfg = require "cfg"
+local cfg = require "cfg"
 local input = require "input"
 local gui = require "gui"
 local players = require "players"
@@ -20,7 +20,6 @@ function love.load()
     rules.init(9)
 end
 
-
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
@@ -28,13 +27,7 @@ function love.update(dt)
     gui.update(dt)
 end
 
-local love = {}
-local cfg = {}
-
 function love.draw()
-    if cfg.tsCanvas == nil or cfg.bsCanvas == nil then
-        return nil
-    end
     -- Top Screen
     cfg.tsCanvas:renderTo(
         function()

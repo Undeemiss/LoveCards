@@ -340,4 +340,13 @@ module.update = function(dt)
     end
 end
 
+module.draw = function()
+    love.graphics.setFont(gfx.defaultFont)
+    love.graphics.setColor(0,0,0)
+    love.graphics.rectangle("fill", 0,0, cfg.bs.w, cfg.bs.h)
+    love.graphics.setColor(1,1,1)
+    love.graphics.print("Give system to Player " .. pid, 0, 0)
+    love.graphics.print("Tap screen to indicate the console has been passed", 0, 20)
+end
+
 return module
