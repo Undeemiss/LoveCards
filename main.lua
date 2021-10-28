@@ -1,5 +1,4 @@
 local dbg = require "debugGame"
-local cards = require "cards"
 local gfx = require "gfx"
 local cfg = require "cfg"
 local input = require "input"
@@ -11,9 +10,6 @@ function love.load()
     print("Loading")
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
     tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
-
-    deck = cards.newDeck(5, 3, 13, 2, 2)
-    deck:shuffle()
 
     players.initPlayers(2)
 
