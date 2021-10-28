@@ -120,29 +120,6 @@ gui.draw = function()
     end
 end
 
-gui.loadPlr = function(pid)
-    -- Unload the fronts of the previous cards
-    if gui.pid ~= 0 then
-        for cid = 1, players[gui.pid].hand.size do
-            players[gui.pid].hand[cid].front = nil
-        end
-    end
-
-    gui.pid = pid
-    gui.endedTurn = false
-    gui.flippedDrawCard = false
-    gui.takenDiscard = false
-    gui.waitingForPlayerSwitch = true
-
-    for cid = 1,players[gui.pid].hand.size do
-        players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
-        players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
-        players[gui.pid].hand[cid].roll = math.pi
-    end
-
-    print("Beginning of Turn Player " .. pid .. " Score: " .. scoring.scoreHand(players[gui.pid].hand, 9)) -- Test code
-end
-
 gui.spreadCards = function()
     gui.spreadingCards = true
     gui.collectingCards = false
@@ -304,6 +281,63 @@ module.initPiles = function(deck)
     deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
     deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
     firstDiscarded = false
+end
+
+-- Load player
+module.loadPlr = function(id)
+    if true then
+        return nil
+    end
+    -- Unload the fronts of the previous cards
+    if gui.pid ~= 0 then
+        for cid = 1, players[gui.pid].hand.size do
+            players[gui.pid].hand[cid].front = nil
+        end
+    end
+
+    gui.pid = pid
+    gui.endedTurn = false
+    gui.flippedDrawCard = false
+    gui.takenDiscard = false
+    gui.waitingForPlayerSwitch = true
+
+    for cid = 1,players[gui.pid].hand.size do
+        players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
+        players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
+        players[gui.pid].hand[cid].roll = math.pi
+    end
+
+    print("Beginning of Turn Player " .. pid .. " Score: " .. scoring.scoreHand(players[gui.pid].hand, 9)) -- Test code
+end
+
+module.update = function(dt)
+    local gui = {}
+    -- Interactable state
+    -- Confirmation dialog before showing a player's cards
+    if gui.waitingForPlayerSwitch then
+        if input.cursor.press then
+            gui.waitingForPlayerSwitch = false
+            gui.spreadCards()
+        end
+
+    -- Card grabbing/dropping/etc
+    elseif gui.canGrab then
+        if gui.grabbed == 0 and input.cursor.press then
+            gui.grabbed = gui.findPressedCard()
+        elseif input.cursor.release then
+            gui.drop(gui.grabbed)
+        end
+
+        if gui.grabbed ~= 0 then
+            gui.slideCard(gui.grabbed)
+        end
+    end
+
+    -- Flipping of draw card
+    if gui.flippedDrawCard then
+        gui.flipDrawTimer = math.min(gui.flipDrawTimer+3*dt, 1)
+        gui.deck[1].roll = (1+gui.flipDrawTimer)*math.pi
+    end
 end
 
 return module

@@ -24,7 +24,7 @@ end
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
-    rules.round.update(dt)
+    rules.update(dt)
     gui.update(dt)
 end
 
