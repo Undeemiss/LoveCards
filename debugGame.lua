@@ -96,9 +96,8 @@ end
 module.draw.devScreen = function()
     -- love.graphics.draw(bgImage)
     love.graphics.setColor(0.1, 0.1, 0.1)
-    love.graphics.rectangle("fill", 0, 0, 1920, 1080)
+    love.graphics.rectangle("fill", 0, 0, cfg.windowX, cfg.windowY)
     love.graphics.setColor(1,1,1)
-
 
     love.graphics.draw(cfg.bsCanvas, 0, 0, 0, 3)
 

@@ -14,11 +14,14 @@ cfg.bs = {
     h = 240
 }
 
+cfg.windowX = 1920
+cfg.windowY = 1080
+
 
 cfg.bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
 cfg.tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
 
-love.window.setMode(1920, 1080)
+love.window.setMode(cfg.windowX, cfg.windowY)
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
 love.graphics.setLineStyle("rough")
 
