@@ -79,7 +79,7 @@ module.keybinds = {}
 module.draw = {}
 
 module.keybinds.update = function()
-    for k,v in ipairs(bindings) do
+    for _,v in ipairs(bindings) do
         if love.keyboard.isDown(v.key) then
             if not v.holding then
                 print(v, v.func)
