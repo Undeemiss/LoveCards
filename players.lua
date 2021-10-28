@@ -9,23 +9,11 @@ local module = {}
 -- Players of the game
 local players = {}
 
-local function newPlayer()
-    local player = {
-        points = 0,
-        hand = {
-            size = 0,
-            order = {}
-        }
-    }
-    setmetatable(player.hand, module.handMt)
-    setmetatable(player.hand.order, module.orderMt)
-    return player
-end
+--
+local handConsts = {}
+local handMeta = {__index = handConsts}
 
-module.handConsts = {}
-module.handMt = {__index = module.handConsts}
-
-module.handConsts.newHand = function(self, deck, size)
+handConsts.newHand = function(self, deck, size)
     -- Erase the existing hand (Goes 2 extra times to clear order as well)
     for i = 1, self.size+2 do
         self[i] = nil
@@ -56,10 +44,10 @@ module.handConsts.newHand = function(self, deck, size)
     self.size = size
 end
 
-module.orderConsts = {}
-module.orderMt = {__index = module.orderConsts}
+local orderConsts = {}
+local orderMeta = {__index = orderConsts}
 
-module.orderConsts.setTop = function(self, cid)
+orderConsts.setTop = function(self, cid)
     local temp1 = cid
     local temp2 = nil
     local i = 1
@@ -75,6 +63,26 @@ module.orderConsts.setTop = function(self, cid)
             return nil
         end
     end
+end
+
+--[[
+    Return a new empty player structure
+]]
+local function newPlayer()
+    local player = {
+        -- Points player has
+        points = 0,
+        -- Current hand?
+        hand = {
+            -- Size of current hand??
+            size = 0,
+            -- Order of current hand??
+            order = {}
+        }
+    }
+    setmetatable(player.hand, handMeta)
+    setmetatable(player.hand.order, orderMeta)
+    return player
 end
 
 --[[
