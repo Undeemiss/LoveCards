@@ -58,7 +58,7 @@ scoring.scoreHand = function(handGiven, wildId)
             end
         end
         bestScore = math.min(bestScore, scoring.scoreBooks(books, nodes[i].wilds, wildId, soleJoker, nodes[i].hasGroup, bestScore))
-        print("bestScore: " .. bestScore)
+        -- print("bestScore: " .. bestScore)
 
         if bestScore == 0 then -- Short-circuit if a perfect score is found
             return 0
@@ -73,13 +73,13 @@ scoring.expandSuit = function(nodes, suit, isRerun)
     for j=13,1,-1 do -- Go through the cards in descending order, including the nonexistent cards 2 and 1 (which may be filled with wilds)
         for k=1,nodes.size do -- This evaluates every node present at the beginning of this loop. Note nodes added mid-loop will be skipped by k until j decreases; this is by design.
             if nodes[k].isValid then -- Properly pruning invalid nodes might yield performance gains
-                print("Node " .. k .. " for j=" .. j .. ", suit=" .. suit .. ": runLength=" .. nodes[k].runLength) -- Testing Code
+                -- print("Node " .. k .. " for j=" .. j .. ", suit=" .. suit .. ": runLength=" .. nodes[k].runLength)
                 if nodes[k].suits[suit][j] > 0 then
                     if nodes[k].suits[suit][j] == 2 then -- If duplicates of a card are found, mark a second pass as necessary
                         doubles = true
                     end
                     -- Create a copy where the card is used to extend/create the run
-                    print("Creating node " .. nodes.size+1 .. " with a " .. j)
+                    -- print("Creating node " .. nodes.size+1 .. " with a " .. j)
                     nodes.size = nodes.size + 1
                     nodes[nodes.size] = {}
                     nodes[nodes.size].hasGroup = true
@@ -95,7 +95,7 @@ scoring.expandSuit = function(nodes, suit, isRerun)
                     nodes[nodes.size].isValid = true
                 elseif nodes[k].runLength > 0 and nodes[k].wilds > 0 then -- Never starts a run with a wild.
                     -- Create a copy where a wild card is used to extend the run
-                    print("Creating node " .. nodes.size+1 .. " with a wild")
+                    -- print("Creating node " .. nodes.size+1 .. " with a wild")
                     nodes.size = nodes.size + 1
                     nodes[nodes.size] = {}
                     nodes[nodes.size].hasGroup = true
@@ -114,7 +114,7 @@ scoring.expandSuit = function(nodes, suit, isRerun)
                 if nodes[k].runLength > 0 then
                     if nodes[k].runLength < 3 then
                         nodes[k].isValid = false -- Invalidate the node if it contains a run that isn't at least size 3.
-                        print("Killing node " .. k)
+                        -- print("Killing node " .. k)
                     end
                     nodes[k].runLength = 0 -- Reset the run size to 0
                 end
@@ -146,17 +146,17 @@ scoring.filter = function(list, keepIf)
     for i=list.size, list.size-filtered + 1, -1 do -- Free up memory at the end of the list equal to the number of overwritten items
         list[i] = nil
     end
-    print("Pruned " .. filtered .. " nodes out of " .. list.size)
+    -- print("Pruned " .. filtered .. " nodes out of " .. list.size)
     list.size = list.size - filtered
     return list
 end
 
 scoring.scoreBooks = function(books, wilds, wildId, soleJoker, hasGroup, bestScore) -- Returns a score of 500 (impossibly high) if it isn't even close to matching bestScore
-    -- Test Code
-    for i=3,13 do
-        print("books[" .. i .. "] = " .. books[i])
-    end
-    print("wilds = " .. wilds)
+    -- -- Test Code
+    -- for i=3,13 do
+    --     print("books[" .. i .. "] = " .. books[i])
+    -- end
+    -- print("wilds = " .. wilds)
 
     -- Score the books
     local nodes = {
@@ -171,28 +171,28 @@ scoring.scoreBooks = function(books, wilds, wildId, soleJoker, hasGroup, bestSco
 
     for i=13,3,-1 do -- Go through the cards in descending order
         for j=1,nodes.size do -- This evaluates every node present at the beginning of this loop. Note nodes added mid-loop will be skipped by j until i decreases; this is by design.
-            print("j=" .. j)
+            -- print("j=" .. j)
             if nodes[j].isValid then
-                print("Considering node " .. j .. " value " .. i)
+                -- print("Considering node " .. j .. " value " .. i)
                 if (books[i] or 0) >= 3 then -- Existing triple case, mark that a group exists
-                    print(i .. " is a triple")
+                    -- print(i .. " is a triple")
                     nodes[j].hasGroup = true
                 elseif (books[i] or 0) == 2 then -- Double case, always use wild if applicable
-                    print(i .. " is a double")
+                    -- print(i .. " is a double")
                     if nodes[j].wilds >= 1 then -- Case where a wild is available, decrement wilds and mark a group exists
-                        print(i .. " is wilded to 3 in node " .. j)
+                        -- print(i .. " is wilded to 3 in node " .. j)
                         nodes[j].wilds = nodes[j].wilds - 1
                         nodes[j].hasGroup = true
                     else -- Case where a wild is unavailable, increase score by 2 * card value
-                        print(i .. " is counted against the score twice in node " .. j)
+                        -- print(i .. " is counted against the score twice in node " .. j)
                         nodes[j].runningScore = nodes[j].runningScore + 2*i
                     end
                 elseif (books[i] or 0) == 1 then
-                    print(i .. " is a single")
+                    -- print(i .. " is a single")
                     if nodes[j].wilds >= 2 and not nodes[j].refusedSplit then -- Case where two wilds are available; create a separate tree where the card is double-wilded.
                         -- If the node in question has previously refused a split, further splitting will not take place, as it's always optimal to split at the highest necessary value
                         -- if splitting is done at all.
-                        print(i .. " is double wilded to 3 in node " .. nodes.size + 1)
+                        -- print(i .. " is double wilded to 3 in node " .. nodes.size + 1)
                         nodes.size = nodes.size + 1
                         nodes[nodes.size] = {}
                         nodes[nodes.size].hasGroup = true
@@ -203,12 +203,12 @@ scoring.scoreBooks = function(books, wilds, wildId, soleJoker, hasGroup, bestSco
                         nodes[j].refusedSplit = true
                     end
                     -- Case where a wild is unused, increase score by card value
-                    print(i .. " is counted against the score in node " .. j)
+                    -- print(i .. " is counted against the score in node " .. j)
                     nodes[j].runningScore = nodes[j].runningScore + i
                 end -- The attempted book is completely ignored if it is empty.
 
                 if nodes[j].runningScore >= bestScore then -- Short-circuit if the running score is already worse than a case we know of
-                    print("Node " .. j .. " is short-circuited")
+                    -- print("Node " .. j .. " is short-circuited")
                     nodes[j].isValid = false
                     nodes[j].runningScore = 500
                 end

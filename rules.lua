@@ -37,21 +37,25 @@ rules.round.update = function(dt)
             rules.round.won = true
             rules.round.countdown = players.size - 1
             rules.round.scores[rules.round.currentPlr] = 0
-            print("Player " .. rules.round.currentPlr .. " won the round; setting countdown to " .. rules.round.countdown) -- Test code
+            -- print("Player " .. rules.round.currentPlr .. " won the round; setting countdown to " .. rules.round.countdown) -- Test code
 
         -- If the round is ending, save the player's score for this round
         elseif rules.round.won then
             rules.round.countdown = rules.round.countdown - 1
             rules.round.scores[rules.round.currentPlr] = scoring.scoreHand(players[rules.round.currentPlr].hand, rules.round.cardCount)
-            print("Player " .. rules.round.currentPlr .. " played their last move; reducing countdown to " .. rules.round.countdown) -- Test code
+            -- print("Player " .. rules.round.currentPlr .. " played their last move; reducing countdown to " .. rules.round.countdown) -- Test code
         end
 
         -- Increment the turn marker and start the next player's turn
-        rules.round.currentPlr = rules.round.currentPlr + 1
-        if rules.round.currentPlr > players.size then
-            rules.round.currentPlr = 1
+        if rules.round.won and (rules.round.countdown == 0) then
+            -- TODO: End the round
+        else
+            rules.round.currentPlr = rules.round.currentPlr + 1
+            if rules.round.currentPlr > players.size then
+                rules.round.currentPlr = 1
+            end
+            gui.loadPlr(rules.round.currentPlr)
         end
-        gui.loadPlr(rules.round.currentPlr)
     end
 
     -- Update the GUI
