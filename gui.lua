@@ -113,7 +113,6 @@ gui.draw = function()
         love.graphics.setColor(1,1,1)
         love.graphics.print("Give system to Player " .. gui.pid, 0, 0)
         love.graphics.print("Tap screen to indicate the console has been passed", 0, 20)
-        love.graphics.print("Testing: Score=" .. scoring.scoreHand(players[gui.pid].hand, 9), 0, 40)
     end
 end
 
@@ -145,6 +144,8 @@ gui.loadPlr = function(pid)
         players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
         players[gui.pid].hand[cid].roll = math.pi
     end
+    
+    print("Beginning of Turn Player " .. pid .. " Score: " .. scoring.scoreHand(players[gui.pid].hand, 9)) -- Test code
 end
 
 gui.spreadCards = function()
