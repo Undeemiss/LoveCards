@@ -8,14 +8,16 @@
 -- local input = require "input"
 -- local gui = require "gui"
 local players = require "players"
--- local rules = require "rules"
+local rules = require "rules"
 
 function love.load()
     print("Loading")
 
+    -- Two players
     players.initPlayers(2)
 
-    -- rules.round.init(9)
+    -- 9 cards
+    rules.init(9)
 end
 
 local love = {}

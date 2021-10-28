@@ -1,6 +1,10 @@
+--[[
+    Cards in game
+]]
+
 local gfx = require "gfx"
 
-cards = {}
+local cards = {}
 
 cards.suits = {
     names = {[0]="Jokers", "Spades", "Diamonds", "Clubs", "Hearts", "Stars"},
@@ -94,8 +98,12 @@ cards.deckConsts.shuffle = function(deck) --Shuffles an input deck.
     end
 end
 
+local module = {}
 
-cards.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
+--[[
+    Create a new deck of cards
+]]
+module.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
     suitCount = suitCount or 4
     minRank = minRank or 1
     maxRank = maxRank or 13
@@ -122,4 +130,4 @@ cards.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
     return deck
 end
 
-return cards
+return module

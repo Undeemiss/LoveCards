@@ -1,44 +1,66 @@
 local gui = require "gui"
 local players = require "players"
+local cards = require "cards"
 
-rules = {}
-
-
-rules.round = {
+--[[
+    State of current round
+]]
+local round = {
+    -- Won or not
     won = false,
+
+    -- If round is over
     over = false,
+
+    --
     countdown = 0,
+
+    -- Number of cards in round
     cardCount = 0,
+
+    -- Current turn
     currentPlr = 0
 }
 
-rules.round.init = function(cardCount)
-    rules.round.cardCount = cardCount
+local module = {}
+
+--[[
+    Initalize a round with `cardCount` cards.
+]]
+module.init = function(cardCount)
+    round.cardCount = cardCount
+
     local deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
     gui.initPiles(deck)
-    for i=1, players.size do
-        players[i].hand:newHand(deck, rules.round.cardCount)
+    for i=1, #players.players do
+        players.players[i].hand:newHand(deck, round.cardCount)
     end
 
-    rules.round.won = false
-    rules.round.over = false
     gui.endedTurn = true
-    rules.round.currentPlr = 0
+    round.won = false
+    round.over = false
+    round.currentPlr = 0
 end
 
-rules.round.update = function(dt)
+--[[
+    Update and advance the round
+
+    `dt` is provided by LOVE
+]]
+module.update = function(dt)
     if gui.endedTurn then
         --TODO: Implement win state
 
-        rules.round.currentPlr = rules.round.currentPlr + 1
-        if rules.round.currentPlr > players.size then
-            rules.round.currentPlr = 1
+        -- Go to next player, or loop back to first.
+        round.currentPlr = round.currentPlr + 1
+        if round.currentPlr > #players.players then
+            round.currentPlr = 1
         end
-        gui.loadPlr(rules.round.currentPlr)
+        gui.loadPlr(round.currentPlr)
     end
 
     gui.update(dt)
 end
 
-return rules
+return module
