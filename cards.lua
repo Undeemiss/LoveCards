@@ -73,25 +73,28 @@ end
 cards.deckConsts = {}
 cards.deckMt = {__index = cards.deckConsts}
 
-cards.deckConsts.pop = function(deck) -- Pops a cardData from the top of the given deck, returning the popped cardData.
-    if deck.size > 0 then
-        local popped = deck[deck.size]
-        deck[deck.size] = nil
-        deck.size = deck.size - 1
-        return popped
-    else
-        return nil
-    end
-end
+local module = {}
 
-cards.deckConsts.shuffle = function(deck) --Shuffles an input deck.
-    for i = 2, deck.size do
-        local j = love.math.random(i)
+local deckConsts = {}
+local deckMeta = {__index = deckConsts}
+
+--[[
+    Shuffles the deck.
+]]
+deckConsts.shuffle = function(deck)
+    for i=#deck, 2, -1 do
+        local j = math.random(i)
         deck[i], deck[j] = deck[j], deck[i]
     end
 end
 
-local module = {}
+--[[
+    Pops a cardData from the top of the given deck, returning the popped cardData.
+]]
+deckConsts.pop = function(deck)
+    return table.remove(deck)
+end
+
 
 local function newCardData(suit, rank)
     local cardData = {}
