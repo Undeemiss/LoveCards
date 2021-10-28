@@ -1,20 +1,25 @@
-local dbg = require "debugGame"
-local gfx = require "gfx"
-local cfg = require "cfg"
-local input = require "input"
-local gui = require "gui"
+--[[
+    Main game entry point
+]]
+
+-- local dbg = require "debugGame"
+-- local gfx = require "gfx"
+-- local cfg = require "cfg"
+-- local input = require "input"
+-- local gui = require "gui"
 local players = require "players"
-local rules = require "rules"
+-- local rules = require "rules"
 
 function love.load()
     print("Loading")
-    -- cfg.bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
-    -- cfg.tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
 
     players.initPlayers(2)
 
-    rules.round.init(9)
+    -- rules.round.init(9)
 end
+
+local love = {}
+local cfg = {}
 
 function love.update(dt)
     dbg.keybinds.update()

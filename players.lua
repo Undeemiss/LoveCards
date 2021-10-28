@@ -1,10 +1,12 @@
+--[[
+    Game Players
+]]
 local cards = require "cards"
 local cfg = require "cfg"
 
 local players = {}
 
 players.size = 0
-
 
 players.handConsts = {}
 players.handMt = {__index = players.handConsts}
@@ -76,6 +78,9 @@ players.newPlayer = function()
 end
 
 players.initPlayers = function(playerCount)
+    for k,v in ipairs(players) do
+        --
+    end
     for i=1,players.size do
         players[i] = nil
     end
