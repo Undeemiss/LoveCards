@@ -103,6 +103,7 @@ local bindings = {}
 
 -- Register a new keybinding `key` that calls `func`
 local function newKeybind(key, func)
+    assert(func ~= nil, "Tried to assign keybinding to nil func")
     local keybind = {
         -- Whether it needs to be held?
         holding = false,
@@ -120,6 +121,7 @@ module.keybinds.update = function()
     for k,v in ipairs(bindings) do
         if love.keyboard.isDown(v.key) then
             if not v.holding then
+                print(v, v.func)
                 v.func()
                 v.holding = true
             end
@@ -131,8 +133,11 @@ end
 
 newKeybind("escape", love.event.quit)
 newKeybind("q", love.event.quit)
-newKeybind("r", love.load)
-newKeybind("d", gui.spreadCards)
-newKeybind("c", gui.collectCards)
+-- FIXME: This is nil?
+-- newKeybind("r", love.load)
+
+-- TODO: Implement
+-- newKeybind("d", gui.spreadCards)
+-- newKeybind("c", gui.collectCards)
 
 return module
