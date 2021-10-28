@@ -24,7 +24,6 @@ input.obj.release = function(obj) -- Detects whether a given object is being rel
 end
 
 input.update = function()
-
     local now = love.mouse.isDown(1)
     local last = input.cursor.held
     input.cursor.held = now
