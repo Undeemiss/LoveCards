@@ -4,14 +4,28 @@
 local cards = require "cards"
 local cfg = require "cfg"
 
+local module = {}
+
+-- Players of the game
 local players = {}
 
-players.size = 0
+local function newPlayer()
+    local player = {
+        points = 0,
+        hand = {
+            size = 0,
+            order = {}
+        }
+    }
+    setmetatable(player.hand, module.handMt)
+    setmetatable(player.hand.order, module.orderMt)
+    return player
+end
 
-players.handConsts = {}
-players.handMt = {__index = players.handConsts}
+module.handConsts = {}
+module.handMt = {__index = module.handConsts}
 
-players.handConsts.newHand = function(self, deck, size)
+module.handConsts.newHand = function(self, deck, size)
     -- Erase the existing hand (Goes 2 extra times to clear order as well)
     for i = 1, self.size+2 do
         self[i] = nil
@@ -42,10 +56,10 @@ players.handConsts.newHand = function(self, deck, size)
     self.size = size
 end
 
-players.orderConsts = {}
-players.orderMt = {__index = players.orderConsts}
+module.orderConsts = {}
+module.orderMt = {__index = module.orderConsts}
 
-players.orderConsts.setTop = function(self, cid)
+module.orderConsts.setTop = function(self, cid)
     local temp1 = cid
     local temp2 = nil
     local i = 1
@@ -63,31 +77,22 @@ players.orderConsts.setTop = function(self, cid)
     end
 end
 
+--[[
+Initalize `playerCount` players
 
-players.newPlayer = function()
-    local player = {
-        points = 0,
-        hand = {
-            size = 0,
-            order = {}
-        }
-    }
-    setmetatable(player.hand, players.handMt)
-    setmetatable(player.hand.order, players.orderMt)
-    return player
-end
-
-players.initPlayers = function(playerCount)
-    for k,v in ipairs(players) do
-        --
-    end
-    for i=1,players.size do
-        players[i] = nil
+Resets any existing players
+]]
+module.initPlayers = function(playerCount)
+    print("Init players")
+    -- Clear existing table to idk save memory?
+    for k,_ in pairs(players) do
+        players[k] = nil
     end
     for i=1,playerCount do
-        players[i] = players.newPlayer()
+        players[i] = newPlayer()
     end
-    players.size = playerCount
 end
 
-return players
+module.players = players
+
+return module
