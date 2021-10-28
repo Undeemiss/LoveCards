@@ -1,6 +1,7 @@
 local cards = require "cards"
 local input = require "input"
 local gui = require "gui"
+local cfg = require "cfg"
 
 dbg = {}
 
@@ -65,16 +66,16 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
     love.graphics.setColor(1,1,1)
 
 
-    love.graphics.draw(bsCanvas, 0, 0, 0, 3)
+    love.graphics.draw(cfg.bsCanvas, 0, 0, 0, 3)
 
     -- Imitation 3DS (On the right)
-    bsCanvas:renderTo(
+    cfg.bsCanvas:renderTo(
         function()
             dbg.draw.crosshair()
         end
     )
-    love.graphics.draw(tsCanvas, 1120, 0, 0, 2)
-    love.graphics.draw(bsCanvas, 1200, 560, 0, 2)
+    love.graphics.draw(cfg.tsCanvas, 1120, 0, 0, 2)
+    love.graphics.draw(cfg.bsCanvas, 1200, 560, 0, 2)
 
     -- Assorted debug info
     love.graphics.setFont(gfx.defaultFont)
@@ -125,6 +126,7 @@ dbg.keybinds.update = function()
 end
 
 dbg.keybinds.newKeybind("escape", love.event.quit)
+dbg.keybinds.newKeybind("q", love.event.quit)
 dbg.keybinds.newKeybind("r", love.load)
 dbg.keybinds.newKeybind("d", gui.spreadCards)
 dbg.keybinds.newKeybind("c", gui.collectCards)

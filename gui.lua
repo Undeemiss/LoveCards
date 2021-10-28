@@ -1,6 +1,7 @@
 local input = require "input"
 local players = require "players"
 local scoring = require "scoring"
+local cfg = require "cfg"
 
 gui = {
     deckData = nil,

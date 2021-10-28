@@ -1,7 +1,7 @@
 local cards = require "cards"
-local scoring = require "scoring"
+local cfg = require "cfg"
 
-players = {}
+local players = {}
 
 players.size = 0
 
