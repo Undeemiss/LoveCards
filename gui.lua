@@ -144,16 +144,16 @@ gui.loadPlr = function(pid)
         players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
         players[gui.pid].hand[cid].roll = math.pi
     end
-    
-    print("Beginning of Turn Player " .. pid .. " Score: " .. scoring.scoreHand(players[gui.pid].hand, 9)) -- Test code
 end
 
+-- Initiates the animation of spreading the cards out from the middle of the screen to their player-determined positions
 gui.spreadCards = function()
     gui.spreadingCards = true
     gui.collectingCards = false
     gui.canGrab = false
 end
 
+-- Initiates the animation of collecting the cards in from their player-determined positions to the middle of the screen
 gui.collectCards = function()
     gui.spreadingCards = false
     gui.collectingCards = true

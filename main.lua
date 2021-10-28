@@ -6,6 +6,7 @@ local input = require "input"
 local gui = require "gui"
 local players = require "players"
 local rules = require "rules"
+local scoring = require "scoring"
 
 function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)

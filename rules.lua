@@ -1,4 +1,6 @@
 local gui = require "gui"
+local scoring = require "scoring"
+local players = require "players"
 
 rules = {}
 
@@ -8,7 +10,8 @@ rules.round = {
     over = false,
     countdown = 0,
     cardCount = 0,
-    currentPlr = 0
+    currentPlr = 0,
+    scores = {}
 }
 
 rules.round.init = function(cardCount)
@@ -27,9 +30,23 @@ rules.round.init = function(cardCount)
 end
 
 rules.round.update = function(dt)
+    -- If the turn has ended, pass the turn
     if gui.endedTurn then
-        --TODO: Implement win state
+        -- If this player is the first to get a perfect score, mark the round as ending
+        if (not rules.round.won) and (rules.round.currentPlr > 0) and (scoring.scoreHand(players[rules.round.currentPlr].hand, rules.round.cardCount) == 0) then
+            rules.round.won = true
+            rules.round.countdown = players.size - 1
+            rules.round.scores[rules.round.currentPlr] = 0
+            print("Player " .. rules.round.currentPlr .. " won the round; setting countdown to " .. rules.round.countdown) -- Test code
 
+        -- If the round is ending, save the player's score for this round
+        elseif rules.round.won then
+            rules.round.countdown = rules.round.countdown - 1
+            rules.round.scores[rules.round.currentPlr] = scoring.scoreHand(players[rules.round.currentPlr].hand, rules.round.cardCount)
+            print("Player " .. rules.round.currentPlr .. " played their last move; reducing countdown to " .. rules.round.countdown) -- Test code
+        end
+
+        -- Increment the turn marker and start the next player's turn
         rules.round.currentPlr = rules.round.currentPlr + 1
         if rules.round.currentPlr > players.size then
             rules.round.currentPlr = 1
@@ -37,6 +54,7 @@ rules.round.update = function(dt)
         gui.loadPlr(rules.round.currentPlr)
     end
 
+    -- Update the GUI
     gui.update(dt)
 end
 
