@@ -61,8 +61,6 @@ module.update = function(dt)
         end
         gui.loadPlr(round.currentPlr)
     end
-
-    gui.update(dt)
 end
 
 return module
