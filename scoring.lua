@@ -24,7 +24,7 @@ scoring.scoreHand = function(handGiven, wildId)
     -- Separate the hand into a more usable form
     local suits = {{}, {}, {}, {}, {}}
     for i=1,5 do
-        for j=3,13 do
+        for j=1,13 do
             suits[i][j] = 0
         end
     end
@@ -70,22 +70,44 @@ end
 
 scoring.expandSuit = function(nodes, suit, isRerun)
     doubles = false
-    for j=13,3,-1 do -- Go through the cards in descending order
+    for j=13,1,-1 do -- Go through the cards in descending order, including the nonexistent cards 2 and 1 (which may be filled with wilds)
         for k=1,nodes.size do -- This evaluates every node present at the beginning of this loop. Note nodes added mid-loop will be skipped by k until j decreases; this is by design.
-            if nodes[1].isValid then -- Properly pruning invalid nodes might yield performance gains
+            if nodes[k].isValid then -- Properly pruning invalid nodes might yield performance gains
                 if nodes[k].suits[suit][j] > 0 then
                     if nodes[k].suits[suit][j] == 2 then -- If duplicates of a card are found, mark a second pass as necessary
                         doubles = true
                     end
-                    -- TODO: Create a copy where the card is used to extend/create the run
+                    -- Create a copy where the card is used to extend/create the run
+                    nodes.size = nodes.size + 1
+                    nodes[nodes.size] = {}
+                    nodes[nodes.size].hasGroup = true
+                    nodes[nodes.size].suits = nodes[k].suits
+                    nodes[nodes.size].suits[suit][j] = nodes[k].suits[suit][j] - 1 -- One less card of the type being used
+                    nodes[nodes.size].wilds = nodes[k].wilds
+                    nodes[nodes.size].runLength = nodes[k].runLength - 1
+                    nodes[nodes.size].isValid = true
                 elseif nodes[k].runLength > 0 and nodes[k].wilds > 0 then -- Never starts a run with a wild.
-                    -- TODO: Create a copy where a wild card is used to extend the run
+                    -- Create a copy where a wild card is used to extend the run
+                    nodes.size = nodes.size + 1
+                    nodes[nodes.size] = {}
+                    nodes[nodes.size].hasGroup = true
+                    nodes[nodes.size].suits = nodes[k].suits
+                    nodes[nodes.size].suits[suit][j] = nodes[k].suits[suit][j]
+                    nodes[nodes.size].wilds = nodes[k].wilds - 1 -- One less wild
+                    nodes[nodes.size].runLength = nodes[k].runLength - 1
+                    nodes[nodes.size].isValid = true
                 end
-                -- TODO: Terminate the run.
+                -- Terminate the run, if it exists.
+                if nodes[k].runLength > 0 then
+                    if nodes[k].runLength < 3 then
+                        nodes[k].isValid = false -- Invalidate the node if it contains a run that isn't at least size 3.
+                    end
+                    nodes[k].runLength = 0 -- Reset the run size to 0
+                end
             end
         end
     end
-    nodes = scoring.filter(nodes, function(node) return node.isValid end)
+    nodes = scoring.filter(nodes, function(node) return node.isValid end) -- Filter the node list in order to keep 
     if doubles and (not isRerun) then -- If any duplicate values were present, rerun the expansion
         nodes = scoring.expandSuit(nodes, suit, true)
     end
