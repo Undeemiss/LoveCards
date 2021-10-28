@@ -12,18 +12,16 @@ function love.load()
     bsCanvas = love.graphics.newCanvas(cfg.bs.w, cfg.bs.h)
     tsCanvas = love.graphics.newCanvas(cfg.ts.w, cfg.ts.h)
 
-    deck = cards.newDeck(5, 3, 13, 2, 2)
-    deck:shuffle()
-
     players.initPlayers(2)
 
     rules.round.init(9)
+    gui.loadPlr(1)
 end
 
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
-    rules.round.update(dt)
+    gui.update(dt)
 end
 
 function love.draw()

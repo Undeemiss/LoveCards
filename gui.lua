@@ -1,6 +1,7 @@
 local input = require "input"
 local players = require "players"
 local scoring = require "scoring"
+local rules = require "rules"
 
 gui = {
     deckData = nil,
@@ -17,7 +18,6 @@ gui = {
     discardingId = 0,
     waitingForPlayerSwitch = false,
     endingTurn = false,
-    endedTurn = false,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -55,8 +55,14 @@ gui.update = function(dt)
         if gui.animTime == 0 then
             gui.collectingCards = false
             if gui.endingTurn then
-                gui.endedTurn = true
                 gui.endingTurn = false
+                if rules.round.passTurn() then -- Pass the turn and check if it's over
+                    -- Continue case
+                    gui.loadPlr(rules.round.currentPlr)
+                else
+                    -- TODO: End case
+                    print("Game ended")
+                end
             end
         end
 
@@ -134,7 +140,6 @@ gui.loadPlr = function(pid)
     end
 
     gui.pid = pid
-    gui.endedTurn = false
     gui.flippedDrawCard = false
     gui.takenDiscard = false
     gui.waitingForPlayerSwitch = true
