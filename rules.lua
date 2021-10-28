@@ -33,10 +33,11 @@ module.init = function(cardCount)
     local deck = cards.newDeck(5, 3, 13, 2, 2)
     deck:shuffle()
 
-    -- gui.initPiles(deck)
-    -- for i=1, #players.players do
-    --     players.players[i].hand:newHand(deck, round.cardCount)
-    -- end
+    gui.initPiles(deck)
+
+    for _,v in ipairs(players.players) do
+        v.hand:newHand(deck, round.cardCount)
+    end
 
     gui.endedTurn = true
     round.won = false

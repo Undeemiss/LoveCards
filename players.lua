@@ -13,6 +13,7 @@ local players = {}
 local handConsts = {}
 local handMeta = {__index = handConsts}
 
+-- TODO: Make this less of a mess
 handConsts.newHand = function(self, deck, size)
     -- Erase the existing hand (Goes 2 extra times to clear order as well)
     for i = 1, self.size+2 do
@@ -32,11 +33,15 @@ handConsts.newHand = function(self, deck, size)
 
     -- Create the hand
     for i = 1, row1Size do
-        self[i] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row1Size-1)) + (40*(i-1)), (((cfg.bs.h-56)/2)+32) - rowOffset)
+        local txi = ((cfg.bs.w/2)-16) - (20*(row1Size-1)) + (40*(i-1))
+        local txy = (((cfg.bs.h-56)/2)+32) - rowOffset
+        self[i] = cards.newCard(deck:pop(), txi, txy)
         self.order[i] = i
     end
     for i = 1, row2Size do
-        self[i + row1Size] = cards.newCard(deck:pop(), ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1)), (((cfg.bs.h-56)/2)+32) + rowOffset)
+        local txi = ((cfg.bs.w/2)-16) - (20*(row2Size-1)) + (40*(i-1))
+        local txy = (((cfg.bs.h-56)/2)+32) + rowOffset
+        self[i + row1Size] = cards.newCard(deck:pop(), txi, txy)
         self.order[i + row1Size] = i + row1Size
     end
     self.order[size+1] = -2
@@ -47,6 +52,7 @@ end
 local orderConsts = {}
 local orderMeta = {__index = orderConsts}
 
+-- TODO: What and why?
 orderConsts.setTop = function(self, cid)
     local temp1 = cid
     local temp2 = nil

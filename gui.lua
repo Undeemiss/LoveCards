@@ -4,6 +4,8 @@ local scoring = require "scoring"
 local cfg = require "cfg"
 local cards = require "cards"
 
+--[[
+
 gui = {
     deckData = nil,
     grabbed = 0,
@@ -118,15 +120,6 @@ gui.draw = function()
     end
 end
 
-gui.initPiles = function(deck)
-    gui.deckData = deck
-    gui.discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
-    gui.discard[1].x = math.floor(cfg.bs.w/3) - 16
-    gui.deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
-    gui.deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
-    gui.firstDiscarded = false
-end
-
 gui.loadPlr = function(pid)
     -- Unload the fronts of the previous cards
     if gui.pid ~= 0 then
@@ -146,7 +139,7 @@ gui.loadPlr = function(pid)
         players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
         players[gui.pid].hand[cid].roll = math.pi
     end
-    
+
     print("Beginning of Turn Player " .. pid .. " Score: " .. scoring.scoreHand(players[gui.pid].hand, 9)) -- Test code
 end
 
@@ -281,6 +274,36 @@ gui.cid2Card = function(cid)
     end
     return card
 end
+--]]
 
+local deckData = nil
+local grabbed = 0
+local pid = 0
+local animTime = 0
+local spreadingCards = false
+local collectingCards = false
+local firstDiscarded = false
+local canGrab = false
+local flippedDrawCard = false
+local flipDrawTimer = 0
+local takenDiscard = false
+local discardingId = 0
+local waitingForPlayerSwitch = false
+local endingTurn = false
+local endedTurn = false
+local deck = {nil, nil}
+local discard = {nil, nil}
 
-return gui
+local module = {}
+
+-- Initalize the deck piles
+module.initPiles = function(deck)
+    deckData = deck
+    discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
+    discard[1].x = math.floor(cfg.bs.w/3) - 16
+    deck[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
+    deck[2] = cards.newCard(deck:pop(), math.floor(cfg.bs.w/3) - 16, 8, math.pi)
+    firstDiscarded = false
+end
+
+return module
