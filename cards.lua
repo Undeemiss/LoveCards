@@ -15,13 +15,6 @@ cards.ranks = {
     sNames = {[0]="X", "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"}
 }
 
-cards.newCardData = function(suit, rank)
-    local cardData = {}
-    cardData.suit = suit -- 0 = Joker, 1 = Spades, 2 = Diamonds, 3 = Clubs, 4 = Hearts, 5 = Stars
-    cardData.rank = rank -- 0 = Joker, 1 = Ace, 11 = Jack, 12 = Queen, 13 = King
-    return cardData
-end
-
 cards.cardConsts = {
     w = 32,
     h = 48,
@@ -100,8 +93,18 @@ end
 
 local module = {}
 
+local function newCardData(suit, rank)
+    local cardData = {}
+    cardData.suit = suit -- 0 = Joker, 1 = Spades, 2 = Diamonds, 3 = Clubs, 4 = Hearts, 5 = Stars
+    cardData.rank = rank -- 0 = Joker, 1 = Ace, 11 = Jack, 12 = Queen, 13 = King
+    -- For both of the above, gaps are just their numbered value
+    return cardData
+end
+
 --[[
-    Create a new deck of cards
+    Create num `decks` new decks of cards
+
+    Returns a single table of all cards
 ]]
 module.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
     suitCount = suitCount or 4
@@ -112,15 +115,16 @@ module.newDeck = function(suitCount, minRank, maxRank, jokerCount, decks)
     local deck = {}
     local i = 1
 
+    -- TODO: Make understandable
     for j = 1, decks do
         for suit = suitCount, 1, -1 do
             for rank = maxRank, minRank, -1 do
-                deck[i] = cards.newCardData(suit, rank)
+                deck[i] = newCardData(suit, rank)
                 i = i + 1
             end
         end
-        for j = 1, jokerCount do
-            deck[i] = cards.newCardData(0, 0)
+        for _ = 1, jokerCount do
+            deck[i] = newCardData(0, 0)
             i = i + 1
         end
     end
