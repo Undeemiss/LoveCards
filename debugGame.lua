@@ -3,7 +3,7 @@ local input = require "input"
 local gui = require "gui"
 local cfg = require "cfg"
 
-dbg = {}
+local dbg = {}
 
 
 dbg.string = {}
@@ -98,37 +98,41 @@ dbg.draw.devScreen = function() -- Draws the given 3DS screen-sized canvases, as
     -- end
 end
 
-dbg.keybinds = {
-    size = 0
-}
+-- Registered keybindings
+local bindings = {}
 
-dbg.keybinds.newKeybind = function(key, func)
-    local keybind = {}
-    keybind.holding = false
-    keybind.key = key
-    keybind.func = func
-    dbg.keybinds.size = dbg.keybinds.size + 1
-    dbg.keybinds[dbg.keybinds.size] = keybind
+-- Register a new keybinding `key` that calls `func`
+local function newKeybind(key, func)
+    local keybind = {
+        -- Whether it needs to be held?
+        holding = false,
+
+        key = key,
+        func = func,
+    }
+    bindings[#bindings+1] = keybind
 end
 
-dbg.keybinds.update = function()
-    for i=1,dbg.keybinds.size do
-        keybind = dbg.keybinds[i]
-        if love.keyboard.isDown(keybind.key) then
-            if not keybind.holding then
-                keybind.func()
-                keybind.holding = true
+local module = {}
+module.keybinds = {}
+
+module.keybinds.update = function()
+    for k,v in ipairs(bindings) do
+        if love.keyboard.isDown(v.key) then
+            if not v.holding then
+                v.func()
+                v.holding = true
             end
         else
-            keybind.holding = false
+            v.holding = false
         end
     end
 end
 
-dbg.keybinds.newKeybind("escape", love.event.quit)
-dbg.keybinds.newKeybind("q", love.event.quit)
-dbg.keybinds.newKeybind("r", love.load)
-dbg.keybinds.newKeybind("d", gui.spreadCards)
-dbg.keybinds.newKeybind("c", gui.collectCards)
+newKeybind("escape", love.event.quit)
+newKeybind("q", love.event.quit)
+newKeybind("r", love.load)
+newKeybind("d", gui.spreadCards)
+newKeybind("c", gui.collectCards)
 
-return dbg
+return module

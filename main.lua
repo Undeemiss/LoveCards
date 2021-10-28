@@ -2,7 +2,7 @@
     Main game entry point
 ]]
 
--- local dbg = require "debugGame"
+local dbg = require "debugGame"
 -- local gfx = require "gfx"
 -- local cfg = require "cfg"
 -- local input = require "input"
@@ -20,14 +20,15 @@ function love.load()
     rules.init(9)
 end
 
-local love = {}
-local cfg = {}
 
 function love.update(dt)
     dbg.keybinds.update()
-    input.update()
-    rules.round.update(dt)
+    -- input.update()
+    -- rules.round.update(dt)
 end
+
+local love = {}
+local cfg = {}
 
 function love.draw()
     if cfg.tsCanvas == nil or cfg.bsCanvas == nil then
