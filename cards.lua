@@ -82,6 +82,7 @@ local deckMeta = {__index = deckConsts}
     Shuffles the deck.
 ]]
 deckConsts.shuffle = function(deck)
+    -- Fisher-Yates shuffle
     for i=#deck, 2, -1 do
         local j = math.random(i)
         deck[i], deck[j] = deck[j], deck[i]
