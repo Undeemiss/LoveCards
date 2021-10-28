@@ -1,7 +1,8 @@
 local cards = require "cards"
 local input = require "input"
 local gui = require "gui"
-local cfg = require "cfg"
+local cfg = require("cfg")
+local gfx = cfg.gfx
 
 local dbg = {}
 

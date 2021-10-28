@@ -1,7 +1,8 @@
 local input = require "input"
 local players = require "players"
 local scoring = require "scoring"
-local cfg = require "cfg"
+local cfg = require("cfg")
+local gfx = cfg.gfx
 local cards = require "cards"
 
 --[[

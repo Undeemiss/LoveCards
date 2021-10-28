@@ -3,7 +3,6 @@
 ]]
 
 local dbg = require "debugGame"
--- local gfx = require "gfx"
 local cfg = require "cfg"
 local input = require "input"
 local gui = require "gui"
@@ -12,6 +11,8 @@ local rules = require "rules"
 
 function love.load()
     print("Loading")
+
+    cfg.init()
 
     -- Two players
     players.initPlayers(2)
@@ -38,7 +39,7 @@ function love.draw()
     -- Bottom Screen
     cfg.bsCanvas:renderTo(
         function()
-            love.graphics.draw(gfx.deskImg, 0, 0)
+            love.graphics.draw(cfg.gfx.deskImg, 0, 0)
             gui.draw()
         end
     )

@@ -2,7 +2,8 @@
     Cards in game
 ]]
 
-local gfx = require "gfx"
+local cfg = require("cfg")
+local gfx = cfg.gfx
 
 local module = {}
 
