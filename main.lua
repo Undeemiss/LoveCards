@@ -8,6 +8,7 @@ local input = require "input"
 local gui = require "gui"
 local players = require "players"
 local rules = require "rules"
+local scoring = require "scoring"
 
 function love.load()
     print("Loading")
@@ -19,12 +20,12 @@ function love.load()
 
     -- 9 cards
     rules.init(9)
+    gui.loadPlr(1)
 end
 
 function love.update(dt)
     dbg.keybinds.update()
     input.update()
-    rules.update(dt)
     gui.update(dt)
 end
 

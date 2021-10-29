@@ -6,6 +6,7 @@ local gfx = cfg.gfx
 local cards = require "cards"
 
 --[[
+local rules = require "rules"
 
 gui = {
     deckData = nil,
@@ -22,7 +23,6 @@ gui = {
     discardingId = 0,
     waitingForPlayerSwitch = false,
     endingTurn = false,
-    endedTurn = false,
 
     deck = {nil, nil},
     discard = {nil, nil},
@@ -60,8 +60,14 @@ gui.update = function(dt)
         if gui.animTime == 0 then
             gui.collectingCards = false
             if gui.endingTurn then
-                gui.endedTurn = true
                 gui.endingTurn = false
+                if rules.round.passTurn() then -- Pass the turn and check if it's over
+                    -- Continue case
+                    gui.loadPlr(rules.round.currentPlr)
+                else
+                    -- TODO: End case
+                    print("Game ended")
+                end
             end
         end
 
@@ -127,6 +133,7 @@ gui.spreadCards = function()
     gui.canGrab = false
 end
 
+-- Initiates the animation of collecting the cards in from their player-determined positions to the middle of the screen
 gui.collectCards = function()
     gui.spreadingCards = false
     gui.collectingCards = true
