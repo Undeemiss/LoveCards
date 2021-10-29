@@ -261,27 +261,65 @@ gui.cid2Card = function(cid)
 end
 --]]
 
+-- The list of cards that constitute the draw pile
+-- TODO: Move this to be managed by rules.lua instead of gui.lua?
+-- TODO: Track the cardData of all discarded cards so that they can be reshuffled when the deck is exhausted.
 local deckData = nil
-local grabbed = 0
-local pid = 0
-local animTime = 0
-local spreadingCards = false
-local collectingCards = false
-local firstDiscarded = false
-local canGrab = false
-local flippedDrawCard = false
-local flipDrawTimer = 0
-local takenDiscard = false
-local discardingId = 0
-local waitingForPlayerSwitch = false
-local endingTurn = false
-local endedTurn = false
+
+-- Keep track of the deck and discard piles that can be interacted with ingame.
 local deck = {nil, nil}
 local discard = {nil, nil}
+
+-- The ID of the currently grabbed card. 0 is no card, -1 is the top card from the draw pile, 
+-- -2 is the top card from the discard pile, and positive numbers are cards on the table.
+local grabbed = 0
+
+-- The ID of the player the GUI is currently rendering the hand of.
+-- TODO: depricate this? It could likely be subsumed by rules.currentPlr
+local pid = 0
+
+-- Timer used for animations.
+-- TODO: Reevaluate the use of this variable, depending on how the animations are reimplemented
+local animTime = 0
+
+-- Flag that represents whether the animation of the cards being spread from the center of the table is playing
+local spreadingCards = false
+
+-- Flag that represents whether the animation of the cards being collected to the center of the table is playing
+local collectingCards = false
+
+local firstDiscarded = false
+
+-- Flag used to disable interaction with cards during animations
+local canGrab = false
+
+-- Flag used to track whether the card at the top of the draw pile has been revealed. 
+-- If so, the player no longer has the option of using the card from the top of the discard pile.
+local flippedDrawCard = false
+
+-- Timer used to animate the flipping of the card at the top of the draw pile
+local flipDrawTimer = 0
+
+-- Flag used to track whether the player has taken the top card from the discard pile. This can be undone if the player so chooses.
+local takenDiscard = false
+
+-- Tracks the ID of the card being discarded at the end of the turn.
+-- TODO: Reevaluate if this has reason to exist outside of the turn end function
+local discardingId = 0
+
+-- Flag to track whether the game is waiting for players to switch. Will likely be moved later.
+local waitingForPlayerSwitch = false
+
+-- Flag to track whether the turn is ending.
+-- TODO: Reevaluate whether this flag is necessary.
+local endingTurn = false
+
 
 local module = {}
 
 -- Initalize the deck piles
+-- TODO: Consider waiting to pop from the deck until the card is actually drawn
+-- TODO: Prevent an error from occuring when there are no cards to draw
 module.initPiles = function(deck)
     deckData = deck
     discard[1] = cards.newCard(deck:pop(), math.floor(cfg.bs.w*2/3) - 16, 8, math.pi)
@@ -293,9 +331,12 @@ end
 
 -- Load player
 module.loadPlr = function(id)
+
+    -- Disable the function for development purposes
     if true then
         return nil
     end
+
     -- Unload the fronts of the previous cards
     if gui.pid ~= 0 then
         for cid = 1, players[gui.pid].hand.size do
@@ -303,12 +344,13 @@ module.loadPlr = function(id)
         end
     end
 
+    -- Reset variables to starting conditions
     gui.pid = pid
-    gui.endedTurn = false
     gui.flippedDrawCard = false
     gui.takenDiscard = false
     gui.waitingForPlayerSwitch = true
 
+    -- The player's cards to the center of the table temporarily
     for cid = 1,players[gui.pid].hand.size do
         players[gui.pid].hand[cid].x = (cfg.bs.w/2)-16
         players[gui.pid].hand[cid].y = (cfg.bs.h/2)-24
